@@ -12,8 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.parkingdev01.ui.screens.Destination
+import com.example.parkingdev01.ui.screens.dashboard.MapScreen
+import com.example.parkingdev01.ui.screens.login.LoginScreen
 import com.example.parkingdev01.ui.theme.ParkingDev01Theme
 
 class MainActivity : ComponentActivity() {
@@ -44,18 +47,18 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ParkingAppNavigation(navController: NavHostController) {
 
-    NavHost(navController, startDestination = Destination.Login.route) {
+    NavHost(navController, startDestination = Destination.Map.route) {
         // Login & Sign Up Destination
         composable(Destination.Login.route) {
-            LoginScreen(navController)
+//            LoginScreen(navController)
         }
         composable(Destination.SignUp.route) {
-            SignUpScreen(navController)
+//            SignUpScreen(navController)
         }
 
         // Dashboard Screen
         composable(Destination.Dashboard.route) {
-            DashboardScreen(navController)
+//            DashboardScreen(navController)
         }
 
         // Map Screen
@@ -65,17 +68,17 @@ fun ParkingAppNavigation(navController: NavHostController) {
 
         // Parkings Screen
         composable(Destination.Parkings.route) {
-            ParkingsScreen()
+//            ParkingsScreen()
         }
 
         // Reservations Screen
         composable(Destination.Reservations.route) {
-            ReservationsScreen()
+//            ReservationsScreen()
         }
 
         // Profile Screen
         composable(Destination.Profile.route) {
-            ProfileScreen()
+//            ProfileScreen()
         }
     }
 }
