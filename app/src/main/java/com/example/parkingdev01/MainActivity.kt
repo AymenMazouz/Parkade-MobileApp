@@ -3,6 +3,7 @@ package com.example.parkingdev01
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -14,26 +15,29 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.parkingdev01.data.repository.DogRepository
 import com.example.parkingdev01.ui.screens.Destination
+import com.example.parkingdev01.ui.screens.dashboard.DogsScreen
 import com.example.parkingdev01.ui.screens.dashboard.MapScreen
 import com.example.parkingdev01.ui.screens.login.LoginScreen
 import com.example.parkingdev01.ui.theme.ParkingDev01Theme
+import com.example.parkingdev01.ui.viewmodels.DogViewModel
 
 class MainActivity : ComponentActivity() {
+    private val dogRepository by lazy { DogRepository() }
 
-
+    private val dogViewModel: DogViewModel = DogViewModel(dogRepository)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ParkingDev01Theme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    ParkingAppNavigation(navController = navController)
+                    ParkingAppNavigation(navController = navController, dogViewModel = dogViewModel)
                 }
             }
         }
@@ -45,9 +49,9 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun ParkingAppNavigation(navController: NavHostController) {
+fun ParkingAppNavigation(navController: NavHostController, dogViewModel: DogViewModel) {
 
-    NavHost(navController, startDestination = Destination.Map.route) {
+    NavHost(navController, startDestination = Destination.Dogs.route) {
         // Login & Sign Up Destination
         composable(Destination.Login.route) {
 //            LoginScreen(navController)
@@ -79,6 +83,11 @@ fun ParkingAppNavigation(navController: NavHostController) {
         // Profile Screen
         composable(Destination.Profile.route) {
 //            ProfileScreen()
+        }
+
+        // Temporary dogs list
+        composable(Destination.Dogs.route){
+            DogsScreen(dogViewModel)
         }
     }
 }

@@ -97,7 +97,7 @@ dependencies {
     ksp("io.github.raamcosta.compose-destinations:ksp:1.1.2-beta")
 
     // Coil
-    implementation("io.coil-kt:coil-compose:1.4.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     //Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.49")
