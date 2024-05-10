@@ -90,10 +90,7 @@ fun ParkingAppNavigation(navController: NavHostController, loginViewModel: Login
 //            ProfileScreen()
         }
 
-        // Temporary dogs list
-//        composable(Destination.Dogs.route){
-//            DogsScreen(dogViewModel)
-//        }
+
     }
 }
 
