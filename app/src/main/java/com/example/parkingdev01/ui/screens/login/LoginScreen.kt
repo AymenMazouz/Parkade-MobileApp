@@ -1,3 +1,4 @@
+
 package com.example.parkingdev01.ui.screens.login
 
 import androidx.compose.foundation.Image
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -34,12 +36,19 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.parkingdev01.R
-
+import com.example.parkingdev01.ui.screens.Destination
+import com.example.parkingdev01.ui.viewmodels.LoginViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(navController: NavHostController, onLoginSuccess: () -> Unit) {
+fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var showErrorSnackbar by remember { mutableStateOf(false) }
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -88,12 +97,33 @@ fun LoginScreen(navController: NavHostController, onLoginSuccess: () -> Unit) {
 
             Button(
                 onClick = {
-                    if (password == "test" && email == "test")
-                        onLoginSuccess()
+                    CoroutineScope(Dispatchers.Main).launch { // Launch coroutine on the main thread
+                        val success = loginViewModel.login(email, password)
+                        if (!success) {
+                            showErrorSnackbar = true
+                        } else {
+                            navController.navigate(Destination.Dashboard.route)
+                        }
+                    }
                 },
+
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Log In", color = Color.White)
+            }
+
+            // Snack bar to display error message
+            if (showErrorSnackbar) {
+                Snackbar(
+                    modifier = Modifier.padding(16.dp),
+                    action = {
+                        Button(onClick = { showErrorSnackbar = false }) {
+                            Text("Dismiss")
+                        }
+                    }
+                ) {
+                    Text("Wrong email or password")
+                }
             }
             Spacer(modifier = Modifier.height(5.dp))
 
