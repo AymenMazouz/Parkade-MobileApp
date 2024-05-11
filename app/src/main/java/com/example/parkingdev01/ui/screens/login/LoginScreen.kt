@@ -102,8 +102,11 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         if (!success) {
                             showErrorSnackbar = true
                         } else {
-                            navController.navigate(Destination.Dashboard.route)
-                        }
+                            navController.navigate(Destination.Dashboard.route) {
+                                popUpTo(Destination.Login.route) {
+                                    inclusive = true
+                                }
+                            }                        }
                     }
                 },
 

@@ -1,5 +1,6 @@
 package com.example.parkingdev01
 
+import com.example.parkingdev01.ui.screens.dashboard.DashboardScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,16 +17,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.parkingdev01.data.repository.UserRepository
 import com.example.parkingdev01.ui.screens.Destination
-import com.example.parkingdev01.ui.screens.dashboard.MapScreen
 import com.example.parkingdev01.ui.screens.login.LoginScreen
 import com.example.parkingdev01.ui.theme.ParkingDev01Theme
 import com.example.parkingdev01.ui.viewmodels.LoginViewModel
 
 class MainActivity : ComponentActivity() {
-//    private val dogRepository by lazy { DogRepository() }
-
-//    private val dogViewModel: DogViewModel = DogViewModel(dogRepository)
-
 
 
     private val userRepository by lazy { UserRepository() }
@@ -52,68 +48,25 @@ class MainActivity : ComponentActivity() {
 
 
 
-
 @Composable
 fun ParkingAppNavigation(navController: NavHostController, loginViewModel: LoginViewModel) {
 
+
     NavHost(navController, startDestination = Destination.Login.route) {
-        // Login & Sign Up Destination
+
+        // Login & Sign Up Destinations
         composable(Destination.Login.route) {
-            LoginScreen(navController,loginViewModel)
-        }
-        composable(Destination.SignUp.route) {
-//            SignUpScreen(navController)
+            LoginScreen(navController, loginViewModel)
         }
 
-        // Dashboard Screen
+
+
+        // Dashboard Destination
         composable(Destination.Dashboard.route) {
-//            DashboardScreen(navController)
+            DashboardScreen(navController)
         }
-
-        // Map Screen
-        composable(Destination.Map.route) {
-            MapScreen()
-        }
-
-        // Parkings Screen
-        composable(Destination.Parkings.route) {
-//            ParkingsScreen()
-        }
-
-        // Reservations Screen
-        composable(Destination.Reservations.route) {
-//            ReservationsScreen()
-        }
-
-        // Profile Screen
-        composable(Destination.Profile.route) {
-//            ProfileScreen()
-        }
-
-
+        
     }
 }
 
 
-
-
-
-
-
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ParkingDev01Theme {
-        Greeting("Android")
-    }
-}

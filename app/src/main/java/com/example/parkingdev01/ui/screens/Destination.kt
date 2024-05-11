@@ -10,5 +10,4 @@ sealed class Destination(val route: String) {
     object Reservations : Destination("reservations")
     object Profile : Destination("profile")
 
-    object Dogs : Destination("dogs")
 }
