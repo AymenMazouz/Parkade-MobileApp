@@ -24,7 +24,7 @@ fun DashboardScreen(navController: NavController) {
     Surface(modifier = Modifier.fillMaxSize()) {
         NavHost(navController = navHostController, startDestination = Destination.Map.route) {
             composable(Destination.Map.route) {
-                MapScreen()
+                MapContent()
             }
             composable(Destination.Parkings.route) {
                 ParkingContent()

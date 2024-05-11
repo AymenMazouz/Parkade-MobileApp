@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitInstance {
-    public const val BASE_URL = "https://9396-105-235-132-225.ngrok-free.app/ords/parkade/"
+    private const val BASE_URL = "https://7cfe-105-235-132-145.ngrok-free.app/ords/parkade/"
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
