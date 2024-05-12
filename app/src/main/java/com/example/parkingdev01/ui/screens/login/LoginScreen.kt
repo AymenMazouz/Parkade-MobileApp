@@ -1,4 +1,3 @@
-
 package com.example.parkingdev01.ui.screens.login
 
 import androidx.compose.foundation.Image
@@ -43,7 +42,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) {
+fun LoginScreen(navHostController: NavHostController, authViewModel: AuthViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showErrorSnackbar by remember { mutableStateOf(false) }
@@ -101,11 +100,12 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                         if (!success) {
                             showErrorSnackbar = true
                         } else {
-                            navController.navigate(Destination.Dashboard.route) {
+                            navHostController.navigate(Destination.Dashboard.route) {
                                 popUpTo(Destination.Login.route) {
                                     inclusive = true
                                 }
-                            }                        }
+                            }
+                        }
                     }
                 },
 
@@ -142,7 +142,7 @@ fun LoginScreen(navController: NavHostController, authViewModel: AuthViewModel) 
                     color = Color.Blue,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.clickable {
-                        navController.navigate("signup")
+                        navHostController.navigate("signup")
                     }
                 )
 

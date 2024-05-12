@@ -62,12 +62,12 @@ fun ParkingAppNavigation(navController: NavHostController, authViewModel: AuthVi
             SignUpScreen(navController, authViewModel)
         }
 
-
-
         // Dashboard Destination
         composable(Destination.Dashboard.route) {
-//            DashboardScreen(navController)
+            DashboardScreen()
         }
+
+
         
     }
 }
