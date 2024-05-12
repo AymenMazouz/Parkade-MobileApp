@@ -1,6 +1,7 @@
 
 package com.example.parkingdev01.data.remote
 
+import com.example.parkingdev01.data.model.Reservation
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -16,5 +17,13 @@ object RetrofitInstance {
 
     val userApi: UserApi by lazy {
         retrofit.create(UserApi::class.java)
+    }
+
+    val parkingApi: ParkingApi by lazy {
+        retrofit.create(ParkingApi::class.java)
+    }
+
+    val reservationApi: ReservationApi by lazy {
+        retrofit.create(ReservationApi::class.java)
     }
 }

@@ -13,18 +13,26 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.parkingdev01.data.repository.ParkingRepository
 import com.example.parkingdev01.data.repository.UserRepository
 import com.example.parkingdev01.ui.screens.Destination
 import com.example.parkingdev01.ui.screens.login.LoginScreen
 import com.example.parkingdev01.ui.screens.login.SignUpScreen
 import com.example.parkingdev01.ui.theme.ParkingDev01Theme
 import com.example.parkingdev01.ui.viewmodels.AuthViewModel
+import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
 
     private val userRepository by lazy { UserRepository() }
     private val authViewModel: AuthViewModel = AuthViewModel(userRepository)
+
+    private val parkingRepository by lazy { ParkingRepository() }
+    private val parkingViewModel: ParkingViewModel = ParkingViewModel(parkingRepository)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +45,12 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
 
-                    ParkingAppNavigation(navController = navController, authViewModel)
+
+                    ParkingAppNavigation(
+                        navController = navController,
+                        authViewModel,
+                        parkingViewModel
+                    )
                 }
             }
         }
@@ -45,13 +58,15 @@ class MainActivity : ComponentActivity() {
 }
 
 
-
-
 @Composable
-fun ParkingAppNavigation(navController: NavHostController, authViewModel: AuthViewModel) {
+fun ParkingAppNavigation(
+    navController: NavHostController,
+    authViewModel: AuthViewModel,
+    parkingViewModel: ParkingViewModel
+) {
 
 
-    NavHost(navController, startDestination = Destination.Login.route) {
+    NavHost(navController, startDestination = Destination.Dashboard.route) {
 
         // Login & Sign Up Destinations
         composable(Destination.Login.route) {
@@ -64,11 +79,10 @@ fun ParkingAppNavigation(navController: NavHostController, authViewModel: AuthVi
 
         // Dashboard Destination
         composable(Destination.Dashboard.route) {
-            DashboardScreen()
+            DashboardScreen(parkingViewModel)
         }
 
 
-        
     }
 }
 

@@ -9,11 +9,12 @@ data class Parking(
     @PrimaryKey val id: Int,
     val name: String,
     val location: String,
-    val description: String,
-    val photoUrl: Int,
+    val photoUrl: String,
     val commune: String,
     val wilaya: String,
     val longitude: Double,
-    val latitude: Double
-
+    val latitude: Double,
+    val dailyPrice: Double,
+    val totalPlaces: Int,
+    val availablePlaces: Int
 )

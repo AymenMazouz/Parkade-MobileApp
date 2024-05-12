@@ -7,12 +7,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.parkingdev01.ui.screens.Destination
 import com.example.parkingdev01.ui.screens.dashboard.content.MapContent
-import com.example.parkingdev01.ui.screens.dashboard.content.ParkingContent
+import com.example.parkingdev01.ui.screens.dashboard.parking.ParkingContent
 import com.example.parkingdev01.ui.screens.dashboard.content.ProfileContent
 import com.example.parkingdev01.ui.screens.dashboard.content.ReservationContent
+import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
 
 @Composable
-fun DashboardNavGraph(navController: NavHostController, modifier: Modifier) {
+fun DashboardNavGraph(navController: NavHostController, parkingViewModel: ParkingViewModel, modifier: Modifier) {
 
 
     NavHost(navController = navController, startDestination = Destination.Map.route) {
@@ -20,7 +21,7 @@ fun DashboardNavGraph(navController: NavHostController, modifier: Modifier) {
             MapContent()
         }
         composable(Destination.Parkings.route) {
-            ParkingContent()
+            ParkingContent(parkingViewModel)
         }
         composable(Destination.Reservations.route) {
             ReservationContent()
