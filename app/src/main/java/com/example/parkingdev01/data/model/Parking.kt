@@ -16,5 +16,6 @@ data class Parking(
     val latitude: Double,
     val dailyPrice: Double,
     val totalPlaces: Int,
-    val availablePlaces: Int
+    val availablePlaces: Int,
+    val description: String
 )

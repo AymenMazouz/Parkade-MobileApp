@@ -1,6 +1,7 @@
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -19,13 +20,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.parkingdev01.data.model.Parking
 import com.example.parkingdev01.data.remote.RetrofitInstance.IMAGES_URL
+import com.example.parkingdev01.ui.screens.Destination
 
 @Composable
-fun ParkingCard(parking: Parking) {
+fun ParkingCard(parking: Parking, navController: NavHostController) {
     val painter = rememberAsyncImagePainter(
         ImageRequest.Builder(LocalContext.current).data(data = "$IMAGES_URL${parking.photoUrl}").apply {
             crossfade(true)
@@ -39,6 +42,9 @@ fun ParkingCard(parking: Parking) {
         border = BorderStroke(1.dp, Color.Black),
         modifier = Modifier
             .size(width = 420.dp, height = 110.dp)
+            .clickable {
+                navController.navigate(Destination.ParkingDetails.createRoute(parking.id))
+            }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -69,7 +75,7 @@ fun ParkingCard(parking: Parking) {
                     modifier = Modifier.padding(bottom = 1.dp)
                 )
                 Text(
-                    text = "Places disponibles: ${parking.availablePlaces}/${parking.totalPlaces}",
+                    text = "Available Places: ${parking.availablePlaces}/${parking.totalPlaces}",
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 1.dp)
                 )

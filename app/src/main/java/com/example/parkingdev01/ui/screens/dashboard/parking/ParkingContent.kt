@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.parkingdev01.data.model.Parking
 import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -21,8 +22,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun ParkingContent(parkingViewModel: ParkingViewModel) {
-    var parkingList by remember { mutableStateOf(emptyList<Parking>()) } // Utilisez remember pour conserver l'état de la liste de parkings
+fun ParkingContent(navController: NavHostController, parkingViewModel: ParkingViewModel) {
+    var parkingList by remember { mutableStateOf(emptyList<Parking>()) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,10 +45,10 @@ fun ParkingContent(parkingViewModel: ParkingViewModel) {
             style = MaterialTheme.typography.headlineLarge
         )
 
-        // Afficher le nom de chaque parking
+        // Display the list of parking cards
         for (parking in parkingList) {
-            ParkingCard(parking);
-
+            ParkingCard(parking, navController)
         }
     }
 }
+

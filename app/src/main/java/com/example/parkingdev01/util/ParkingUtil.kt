@@ -19,5 +19,6 @@ data class ParkingItem(
     val latitude: Double,
     val daily_price: Double,
     val total_places: Int,
-    val available_places: Int
+    val available_places: Int,
+    val description: String
 )

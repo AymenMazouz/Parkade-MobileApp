@@ -66,7 +66,7 @@ fun ParkingAppNavigation(
 ) {
 
 
-    NavHost(navController, startDestination = Destination.Login.route) {
+    NavHost(navController, startDestination = Destination.Dashboard.route) {
 
         // Login & Sign Up Destinations
         composable(Destination.Login.route) {

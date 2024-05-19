@@ -9,5 +9,8 @@ sealed class Destination(val route: String) {
     object Parkings : Destination("parkings")
     object Reservations : Destination("reservations")
     object Profile : Destination("profile")
+    object ParkingDetails : Destination("parkingDetails/{parkingId}") {
+        fun createRoute(parkingId: Int) = "parkingDetails/$parkingId"
+    }
 
 }
