@@ -3,6 +3,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.example.parkingdev01.ui.screens.dashboard.map.MapEvent
+import com.example.parkingdev01.ui.screens.dashboard.map.MapState
+import com.example.parkingdev01.ui.screens.dashboard.map.MapStyle
 import com.google.android.gms.maps.model.MapStyleOptions
 
 class MapsViewModel: ViewModel(){
@@ -13,10 +16,10 @@ class MapsViewModel: ViewModel(){
         when(event){
             is MapEvent.ToggleFalloutMap -> {
                 state=state.copy(
-                    propreties = state.propreties.copy(
+                    properties = state.properties.copy(
                         mapStyleOptions = if (state.isFalloutMap){
                             null
-                        }else MapStyleOptions(MapStyle.json),
+                        }else MapStyleOptions(MapStyle.JSON),
                     ),
                     isFalloutMap = !state.isFalloutMap
                 )

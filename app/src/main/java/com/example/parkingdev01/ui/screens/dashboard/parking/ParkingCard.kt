@@ -20,15 +20,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.parkingdev01.data.model.Parking
-import com.example.parkingdev01.data.remote.RetrofitInstance.Images_URL
+import com.example.parkingdev01.data.remote.RetrofitInstance.IMAGES_URL
 
 @Composable
 fun ParkingCard(parking: Parking) {
     val painter = rememberAsyncImagePainter(
-        ImageRequest.Builder(LocalContext.current).data(data = "$Images_URL${parking.photoUrl}").apply {
+        ImageRequest.Builder(LocalContext.current).data(data = "$IMAGES_URL${parking.photoUrl}").apply {
             crossfade(true)
         }.build()
     )

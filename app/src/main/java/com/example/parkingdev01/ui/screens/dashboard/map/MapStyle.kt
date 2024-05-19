@@ -1,7 +1,7 @@
-package com.plcoding.mapscomposeguide.presentation
+package com.example.parkingdev01.ui.screens.dashboard.map
 
 object MapStyle {
-    val json ="""
+    const val JSON ="""
     [
     {
         "featureType": "all",

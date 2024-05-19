@@ -14,8 +14,13 @@
         private val userApi = RetrofitInstance.userApi
 
         suspend fun authenticate(email: String, password: String): Boolean {
+
+
             val response = userApi.authenticate(email, password)
+
+
             if (response.isSuccessful) {
+
                 val jsonResponse = response.body()?.string()
                 println("JSON Response: $jsonResponse") // Print JSON response for debugging
                 jsonResponse?.let {

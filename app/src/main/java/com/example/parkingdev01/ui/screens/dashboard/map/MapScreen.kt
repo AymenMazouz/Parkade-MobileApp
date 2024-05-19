@@ -1,4 +1,4 @@
-package com.plcoding.mapscomposeguide.presentation
+package com.example.parkingdev01.ui.screens.dashboard.map
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,11 +14,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
+import com.plcoding.mapscomposeguide.presentation.MapsViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MapScreen(
-    viewModel :MapsViewModel =androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel : MapsViewModel =androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
     val uiSettings =remember {
@@ -43,7 +44,7 @@ fun MapScreen(
     ){
         GoogleMap(
             modifier=Modifier.fillMaxSize(),
-            properties = viewModel.state.propreties,
+            properties = viewModel.state.properties,
             uiSettings = uiSettings,
             onMapLongClick = {
 
