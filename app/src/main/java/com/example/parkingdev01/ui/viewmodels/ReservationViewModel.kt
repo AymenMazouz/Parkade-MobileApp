@@ -7,20 +7,31 @@ import kotlinx.coroutines.flow.Flow
 
 
 
-class ReservationViewModel(private val repository: ReservationRepository) : ViewModel() {
-    fun getUserReservations(userId: String): Flow<List<Reservation>> =
-        repository.getUserReservations(userId)
+class ReservationViewModel(private val reservationRepository: ReservationRepository) : ViewModel() {
 
-    suspend fun insertReservation(reservation: Reservation) {
-        repository.insertReservation(reservation)
+
+    // Remote:
+    suspend fun bookParkingSpace(reservation: Reservation): Boolean {
+        return reservationRepository.book(reservation)
     }
 
-    suspend fun deleteReservation(reservation: Reservation) {
-        repository.deleteReservation(reservation)
-    }
 
-    suspend fun clearReservations() {
-        repository.clearReservations()
-    }
+
+
+    // Local:
+//    fun getUserReservations(userId: String): Flow<List<Reservation>> =
+//        reservationRepository.getUserReservations(userId)
+//
+//    suspend fun insertReservation(reservation: Reservation) {
+//        reservationRepository.insertReservation(reservation)
+//    }
+//
+//    suspend fun deleteReservation(reservation: Reservation) {
+//        reservationRepository.deleteReservation(reservation)
+//    }
+//
+//    suspend fun clearReservations() {
+//        reservationRepository.clearReservations()
+//    }
 
 }

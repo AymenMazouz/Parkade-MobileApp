@@ -7,9 +7,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
+import com.example.parkingdev01.ui.viewmodels.ReservationViewModel
 
 @Composable
-fun DashboardScreen(parkingViewModel: ParkingViewModel) {
+fun DashboardScreen(parkingViewModel: ParkingViewModel, reservationViewModel: ReservationViewModel) {
 
     val navController = rememberNavController()
 
@@ -18,6 +19,13 @@ fun DashboardScreen(parkingViewModel: ParkingViewModel) {
             DashboardBottomBar(navController)
         }
     ) { innerPadding ->
-        DashboardNavGraph(navController = navController,parkingViewModel, Modifier.padding(innerPadding).padding(10.dp))
+        DashboardNavGraph(
+            navController = navController,
+            parkingViewModel,
+            reservationViewModel = reservationViewModel,
+            Modifier
+                .padding(innerPadding)
+                .padding(10.dp)
+        )
     }
 }

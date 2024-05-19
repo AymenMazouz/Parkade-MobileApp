@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.parkingdev01.data.repository.ParkingRepository
+import com.example.parkingdev01.data.repository.ReservationRepository
 import com.example.parkingdev01.data.repository.UserRepository
 import com.example.parkingdev01.ui.screens.Destination
 import com.example.parkingdev01.ui.screens.login.LoginScreen
@@ -21,6 +22,7 @@ import com.example.parkingdev01.ui.screens.login.SignUpScreen
 import com.example.parkingdev01.ui.theme.ParkingDev01Theme
 import com.example.parkingdev01.ui.viewmodels.AuthViewModel
 import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
+import com.example.parkingdev01.ui.viewmodels.ReservationViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,6 +36,8 @@ class MainActivity : ComponentActivity() {
     private val parkingRepository by lazy { ParkingRepository() }
     private val parkingViewModel: ParkingViewModel = ParkingViewModel(parkingRepository)
 
+    private val reservationRepository by lazy { ReservationRepository() }
+    private val reservationViewModel: ReservationViewModel = ReservationViewModel(reservationRepository)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +53,8 @@ class MainActivity : ComponentActivity() {
                     ParkingAppNavigation(
                         navController = navController,
                         authViewModel,
-                        parkingViewModel
+                        parkingViewModel,
+                        reservationViewModel
                     )
                 }
             }
@@ -62,7 +67,8 @@ class MainActivity : ComponentActivity() {
 fun ParkingAppNavigation(
     navController: NavHostController,
     authViewModel: AuthViewModel,
-    parkingViewModel: ParkingViewModel
+    parkingViewModel: ParkingViewModel,
+    reservationViewModel: ReservationViewModel
 ) {
 
 
@@ -79,7 +85,7 @@ fun ParkingAppNavigation(
 
         // Dashboard Destination
         composable(Destination.Dashboard.route) {
-            DashboardScreen(parkingViewModel)
+            DashboardScreen(parkingViewModel, reservationViewModel = reservationViewModel)
         }
 
 

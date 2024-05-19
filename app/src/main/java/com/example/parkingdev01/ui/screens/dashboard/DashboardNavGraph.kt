@@ -12,11 +12,13 @@ import com.example.parkingdev01.ui.screens.dashboard.content.ProfileContent
 import com.example.parkingdev01.ui.screens.dashboard.content.ReservationContent
 import com.example.parkingdev01.ui.screens.dashboard.parking.ParkingDetails
 import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
+import com.example.parkingdev01.ui.viewmodels.ReservationViewModel
 
 @Composable
 fun DashboardNavGraph(
     navController: NavHostController,
     parkingViewModel: ParkingViewModel,
+    reservationViewModel: ReservationViewModel,
     modifier: Modifier
 ) {
 
@@ -39,7 +41,7 @@ fun DashboardNavGraph(
         composable(Destination.ParkingDetails.route) { backStackEntry ->
             val parkingId = backStackEntry.arguments?.getString("parkingId")?.toIntOrNull()
             if (parkingId != null) {
-                ParkingDetails(parkingId, parkingViewModel)
+                ParkingDetails(parkingId, parkingViewModel, reservationViewModel)
             }
         }
     }

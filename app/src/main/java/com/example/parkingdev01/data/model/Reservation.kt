@@ -16,9 +16,9 @@ import androidx.room.PrimaryKey
 data class Reservation(
     @PrimaryKey val id: Int,
     val parkingId: Int,
-    val userId: String,
-    val date: String,
+    val userId: Int,
+    val placedAt: String,
     val entryTime: String,
     val exitTime: String,
-    val price: Double
+    val price: Long
 )
