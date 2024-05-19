@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.parkingdev01.ui.screens.Destination
-import com.example.parkingdev01.ui.screens.dashboard.content.MapContent
+import com.example.parkingdev01.ui.screens.dashboard.Map.MapContent
 import com.example.parkingdev01.ui.screens.dashboard.parking.ParkingContent
 import com.example.parkingdev01.ui.screens.dashboard.content.ProfileContent
 import com.example.parkingdev01.ui.screens.dashboard.content.ReservationContent
