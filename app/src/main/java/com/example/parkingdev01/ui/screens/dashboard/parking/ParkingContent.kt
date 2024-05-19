@@ -1,26 +1,28 @@
 package com.example.parkingdev01.ui.screens.dashboard.parking
 
+import ParkingCard
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.parkingdev01.R
 import com.example.parkingdev01.data.model.Parking
 import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 @Composable
 fun ParkingContent(parkingViewModel: ParkingViewModel) {
-    var parkingList : List<Parking>
+    var parkingList by remember { mutableStateOf(emptyList<Parking>()) } // Utilisez remember pour conserver l'état de la liste de parkings
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -28,7 +30,7 @@ fun ParkingContent(parkingViewModel: ParkingViewModel) {
     ) {
         Button(
             onClick = {
-                CoroutineScope(Dispatchers.Main).launch { // Launch coroutine on the main thread
+                CoroutineScope(Dispatchers.Main).launch {
                     parkingList = parkingViewModel.loadParkingRemote()
                 }
             },
@@ -36,9 +38,16 @@ fun ParkingContent(parkingViewModel: ParkingViewModel) {
         ) {
             Text(text = "Refresh")
         }
+
         Text(
             text = "Parking Screen",
             style = MaterialTheme.typography.headlineLarge
         )
+
+        // Afficher le nom de chaque parking
+        for (parking in parkingList) {
+            ParkingCard(parking);
+
+        }
     }
 }

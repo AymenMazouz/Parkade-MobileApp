@@ -9,4 +9,11 @@ interface ParkingApi {
     @GET("parking/all")
     suspend fun getAll(): Response<ResponseBody>
 
+
+    @GET("parking/:id")
+    suspend fun GetParkingById(
+        @Header("id") id: Int
+    ): Response<ResponseBody>
+
+
 }

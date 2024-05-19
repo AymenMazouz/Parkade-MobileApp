@@ -64,6 +64,7 @@ dependencies {
     implementation ("androidx.compose.ui:ui-text-google-fonts:1.6.6")
 
     implementation("com.google.dagger:hilt-android:2.49")
+    implementation(libs.play.services.maps)
     kapt("com.google.dagger:hilt-android-compiler:2.40.5")
     implementation("androidx.core:core-ktx:1.13.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -91,11 +92,16 @@ dependencies {
     implementation("androidx.paging:paging-compose:3.2.1")
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation("com.google.accompanist:accompanist-swiperefresh:0.24.2-alpha")
+    val compose_version = "1.5.0"
 
     // Compose Nav Destinations
+    implementation ("androidx.compose.ui:ui:$compose_version")
+    implementation ("androidx.compose.material:material:$compose_version")
+    implementation ("androidx.compose.ui:ui-tooling-preview:$compose_version")
     implementation("io.github.raamcosta.compose-destinations:core:1.1.2-beta")
     ksp("io.github.raamcosta.compose-destinations:ksp:1.1.2-beta")
-
+    implementation ("androidx.compose.material:material-icons-extended:$compose_version")
+    implementation ("com.google.maps.android:maps-compose:1.0.0")
     // Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
 
@@ -120,7 +126,12 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
 
     implementation ("com.squareup.moshi:moshi-kotlin:1.12.0")
+// image
+    implementation("com.google.accompanist:accompanist-coil:0.15.0")
 
     // -- Navigation
     implementation ("androidx.navigation:navigation-compose:2.7.7")
+
+    // Google Maps
+    implementation ("com.google.android.gms:play-services-maps:18.0.2")
 }

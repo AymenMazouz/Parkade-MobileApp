@@ -12,7 +12,9 @@ class ParkingViewModel(private val parkingRepository: ParkingRepository) : ViewM
     suspend fun loadParkingRemote() : List<Parking>{
         return parkingRepository.getAll()
     }
-
+    suspend fun GetParkingById(id:Int) : Parking?{
+        return parkingRepository.GetParkingById(id)
+    }
     // Local:
 //    val allParkings: Flow<List<Parking>> = parkingRepository.allParkings
 }
