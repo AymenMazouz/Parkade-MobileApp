@@ -12,5 +12,8 @@ sealed class Destination(val route: String) {
     object ParkingDetails : Destination("parkingDetails/{parkingId}") {
         fun createRoute(parkingId: Int) = "parkingDetails/$parkingId"
     }
+    object ReservationDetails : Destination("reservationDetails/{reservationId}") {
+        fun createRoute(reservationId: Int) = "reservationDetails/$reservationId"
+    }
 
 }

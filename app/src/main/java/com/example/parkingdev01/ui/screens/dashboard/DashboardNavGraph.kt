@@ -1,5 +1,6 @@
 package com.example.parkingdev01.ui.screens.dashboard
 
+import ParkingContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -7,10 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.parkingdev01.ui.screens.Destination
 import com.example.parkingdev01.ui.screens.dashboard.map.MapContent
-import com.example.parkingdev01.ui.screens.dashboard.parking.ParkingContent
-import com.example.parkingdev01.ui.screens.dashboard.content.ProfileContent
-import com.example.parkingdev01.ui.screens.dashboard.content.ReservationContent
 import com.example.parkingdev01.ui.screens.dashboard.parking.ParkingDetails
+import com.example.parkingdev01.ui.screens.dashboard.reservation.ReservationDetails
+import com.example.parkingdev01.ui.screens.dashboard.content.ProfileContent
+import com.example.parkingdev01.ui.screens.dashboard.reservation.ReservationContent
 import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
 import com.example.parkingdev01.ui.viewmodels.ReservationViewModel
 
@@ -31,7 +32,7 @@ fun DashboardNavGraph(
             ParkingContent(navController,parkingViewModel)
         }
         composable(Destination.Reservations.route) {
-            ReservationContent()
+            ReservationContent(navController,reservationViewModel) //TO CHAAAAAAAAAAAAANGEEEEEEE
         }
         composable(Destination.Profile.route) {
             ProfileContent(navController)
@@ -42,6 +43,12 @@ fun DashboardNavGraph(
             val parkingId = backStackEntry.arguments?.getString("parkingId")?.toIntOrNull()
             if (parkingId != null) {
                 ParkingDetails(parkingId, parkingViewModel, reservationViewModel)
+            }
+        }
+        composable(Destination.ReservationDetails.route) { backStackEntry ->
+            val reservationId = backStackEntry.arguments?.getString("reservationId")?.toIntOrNull()
+            if (reservationId != null) {
+                ReservationDetails(reservationId, reservationViewModel)
             }
         }
     }

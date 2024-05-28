@@ -1,16 +1,39 @@
+package com.example.parkingdev01.ui.screens.dashboard.reservation
+
+import ParkingCard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -22,16 +45,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.parkingdev01.R
-import com.example.parkingdev01.data.model.Parking
+import com.example.parkingdev01.data.model.Reservation
 import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
+import com.example.parkingdev01.ui.viewmodels.ReservationViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ParkingContent(navController: NavHostController, parkingViewModel: ParkingViewModel) {
-    var parkingList by remember { mutableStateOf(emptyList<Parking>()) }
+fun ReservationContent(navController: NavHostController, reservationViewModel: ReservationViewModel) {
+    var reservationList by remember { mutableStateOf(emptyList<Reservation>()) }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -59,6 +82,7 @@ fun ParkingContent(navController: NavHostController, parkingViewModel: ParkingVi
                         modifier = Modifier
                             .size(28.dp)
                     )
+
                 }
             },
             // backgroundColor = Color.Transparent, // Transparent background for app bar
@@ -101,29 +125,28 @@ fun ParkingContent(navController: NavHostController, parkingViewModel: ParkingVi
                             modifier = Modifier.padding(bottom = 11.dp)
                         )
                         Text(
-                            text = "Find a place to your car",
+                            text = "Check in using the QR code",
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp, // Définir la taille de la police
                             modifier = Modifier.padding(bottom = 5.dp)
                         )
                         Text(
-                            text = "Here you find the list of the parkings",
+                            text = "Here you find the list of your Reservations",
                             color = Color.White,
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
                     Box(
                         modifier = Modifier
-                            .weight(0.27f) // Take 30% of the width
+                            .weight(0.3f) // Take 30% of the width
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.parkings), // Replace with your image resource
-                            contentDescription = "Parking Image",
+                            painter = painterResource(id = R.drawable.qr), // Replace with your image resource
+                            contentDescription = "reservationImage",
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(80.dp),
-                            contentScale = ContentScale.Crop
+                                .height(100.dp),
                         )
                     }
                 }
@@ -134,7 +157,8 @@ fun ParkingContent(navController: NavHostController, parkingViewModel: ParkingVi
         IconButton(
             onClick = {
                 CoroutineScope(Dispatchers.Main).launch {
-                    parkingList = parkingViewModel.loadParkingRemote()
+                    reservationList = reservationViewModel.loadReservationByUser(1)
+                    // here you should change from the preference File
                 }
             },
             modifier = Modifier
@@ -152,8 +176,8 @@ fun ParkingContent(navController: NavHostController, parkingViewModel: ParkingVi
         ) {
             item {
                 // Display the list of parking cards
-                for (parking in parkingList) {
-                    ParkingCard(parking, navController)
+                for (reservation in reservationList) {
+                    ReservationCard(reservation, navController)
                 }
             }
         }
