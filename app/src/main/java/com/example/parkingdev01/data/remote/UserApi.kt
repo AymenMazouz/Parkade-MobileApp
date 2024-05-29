@@ -8,6 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface UserApi {
     @GET("user/login")
@@ -18,7 +19,6 @@ interface UserApi {
 
 
 
-//    @Headers("Content-Type: application/json") // Specify the content type if needed
     @POST("user/signup")
     suspend fun signUp(
         @Header("email") email: String,
@@ -28,6 +28,14 @@ interface UserApi {
         @Header("phoneNumber") phoneNumber: String,
         @Header("photoUrl") photoUrl: String
     ): Response<ResponseBody>
+
+
+    @GET("user/get")
+    suspend fun getDetails(
+        @Header("email") email: String,
+        @Header("password") password: String,
+    ): Response<ResponseBody>
+
 
 }
 

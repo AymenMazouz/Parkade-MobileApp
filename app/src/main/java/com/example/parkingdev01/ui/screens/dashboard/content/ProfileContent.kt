@@ -1,5 +1,6 @@
 package com.example.parkingdev01.ui.screens.dashboard.content
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,11 +21,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.parkingdev01.ui.screens.Destination
+import com.example.parkingdev01.util.PreferencesManager
 
 
 @Composable
-fun ProfileContent(navHostController: NavHostController){
-
+fun ProfileContent(
+    navHostController: NavHostController,
+    preferencesManager: PreferencesManager,
+    activity: ComponentActivity
+) {
+    val user = preferencesManager.getUser()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -37,57 +43,59 @@ fun ProfileContent(navHostController: NavHostController){
             fontWeight = FontWeight.Bold,
             color = Color.DarkGray,
             modifier = Modifier.padding(bottom = 30.dp)
-
         )
         Divider(
             modifier = Modifier
                 .height(1.dp)
                 .fillMaxWidth()
                 .padding(horizontal = 40.dp),
-            color = Color.Gray // Change the color as needed
+            color = Color.Gray
         )
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 40.dp)
-
-        ){
-            Text(
-                text = "Full Name:",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.DarkGray,
-
+        if (user != null) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 40.dp)
+            ) {
+                Text(
+                    text = "Full Name:",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.DarkGray,
                 )
-            Text(
-                text = "From Pref File",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Normal
-            )
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 40.dp)
-
-        ){
-            Text(
-                text = "Email:",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.DarkGray,
-
+                Text(
+                    text = "${user.firstName} ${user.lastName}",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Normal
                 )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 40.dp)
+            ) {
+                Text(
+                    text = "Email:",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.DarkGray,
+                )
+                Text(
+                    text = user.email,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Normal
+                )
+            }
+        } else {
             Text(
-                text = "From Pref File",
+                text = "No user information available",
                 style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Normal
+                color = Color.DarkGray
             )
         }
 
@@ -95,15 +103,14 @@ fun ProfileContent(navHostController: NavHostController){
 
         Button(
             onClick = {
-                navHostController.navigate(Destination.Login.route) {
-                    popUpTo(Destination.Login.route) { inclusive = true }
-                }
+                preferencesManager.clearUser()
+                activity.finish() // Close the app
+
             },
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 40.dp)
         ) {
             Text("Log Out", color = Color.White)
         }
-
     }
 }

@@ -1,6 +1,7 @@
 package com.example.parkingdev01.ui.screens.dashboard
 
 import ParkingContent
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -14,12 +15,15 @@ import com.example.parkingdev01.ui.screens.dashboard.reservation.ReservationCont
 import com.example.parkingdev01.ui.screens.dashboard.reservation.ReservationDetails
 import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
 import com.example.parkingdev01.ui.viewmodels.ReservationViewModel
+import com.example.parkingdev01.util.PreferencesManager
 
 @Composable
 fun DashboardNavGraph(
     navController: NavHostController,
     parkingViewModel: ParkingViewModel,
     reservationViewModel: ReservationViewModel,
+    preferencesManager: PreferencesManager,
+    activity: ComponentActivity,
     modifier: Modifier
 ) {
 
@@ -35,7 +39,7 @@ fun DashboardNavGraph(
             ReservationContent(navController,reservationViewModel) //TO CHAAAAAAAAAAAAANGEEEEEEE
         }
         composable(Destination.Profile.route) {
-            ProfileContent(navController)
+            ProfileContent(navController, preferencesManager, activity = activity)
         }
 
 

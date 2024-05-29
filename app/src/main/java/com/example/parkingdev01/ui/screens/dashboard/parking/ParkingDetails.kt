@@ -211,7 +211,8 @@ fun ParkingDetails(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 30.dp), // Adding bottom margin of 30.dp
-                    enabled = reservationStatus == null // Disable the button if reservationStatus is not null
+                    enabled = parking!!.availablePlaces > 0 && reservationStatus != "Reservation successful"
+                // Disable the button if reservationStatus is not null
                 ) {
                     Text("Book Now", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 }

@@ -1,13 +1,24 @@
 package com.example.parkingdev01.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.example.parkingdev01.data.model.User
 import com.example.parkingdev01.data.repository.UserRepository
+import com.example.parkingdev01.util.PreferencesManager
 
-
-class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
+class AuthViewModel(
+    private val userRepository: UserRepository,
+    private val preferencesManager: PreferencesManager
+) : ViewModel() {
 
     suspend fun login(email: String, password: String): Boolean {
-        return userRepository.authenticate(email, password)
+        val isSuccess = userRepository.authenticate(email, password)
+
+        if (isSuccess) {
+            val user: User? = userRepository.getDetails(email, password)
+            user?.let { preferencesManager.saveUser(it) }
+        }
+
+        return isSuccess
     }
 
     suspend fun signup(
@@ -18,8 +29,7 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
         phoneNumber: String,
         photoUrl: String
     ): Boolean {
-
-        return userRepository.createUser(
+        val isSuccess = userRepository.createUser(
             email,
             password,
             firstName,
@@ -27,5 +37,12 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
             phoneNumber,
             photoUrl
         )
+
+        if (isSuccess) {
+            val user: User? = userRepository.getDetails(email, password)
+            user.let { preferencesManager.saveUser(it!!) }
+        }
+
+        return isSuccess
     }
 }

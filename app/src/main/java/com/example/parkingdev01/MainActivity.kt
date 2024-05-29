@@ -1,6 +1,5 @@
 package com.example.parkingdev01
 
-import com.example.parkingdev01.ui.screens.dashboard.DashboardScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,30 +16,36 @@ import com.example.parkingdev01.data.repository.ParkingRepository
 import com.example.parkingdev01.data.repository.ReservationRepository
 import com.example.parkingdev01.data.repository.UserRepository
 import com.example.parkingdev01.ui.screens.Destination
+import com.example.parkingdev01.ui.screens.dashboard.DashboardScreen
 import com.example.parkingdev01.ui.screens.login.LoginScreen
 import com.example.parkingdev01.ui.screens.login.SignUpScreen
 import com.example.parkingdev01.ui.theme.ParkingDev01Theme
 import com.example.parkingdev01.ui.viewmodels.AuthViewModel
 import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
 import com.example.parkingdev01.ui.viewmodels.ReservationViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.parkingdev01.util.PreferencesManager
 
 class MainActivity : ComponentActivity() {
 
-
+    private lateinit var preferencesManager: PreferencesManager
     private val userRepository by lazy { UserRepository() }
-    private val authViewModel: AuthViewModel = AuthViewModel(userRepository)
-
     private val parkingRepository by lazy { ParkingRepository() }
-    private val parkingViewModel: ParkingViewModel = ParkingViewModel(parkingRepository)
-
     private val reservationRepository by lazy { ReservationRepository() }
-    private val reservationViewModel: ReservationViewModel = ReservationViewModel(reservationRepository)
+
+    private val parkingViewModel: ParkingViewModel by lazy { ParkingViewModel(parkingRepository) }
+    private val reservationViewModel: ReservationViewModel by lazy {
+        ReservationViewModel(
+            reservationRepository
+        )
+    }
+
+    private val authViewModel: AuthViewModel by lazy {
+        AuthViewModel(userRepository, preferencesManager)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        preferencesManager = PreferencesManager(this) // Initialize preferencesManager here
         setContent {
             ParkingDev01Theme {
                 Surface(
@@ -49,30 +54,42 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
 
+                    val userExists = preferencesManager.getUser() != null
 
-                    ParkingAppNavigation(
-                        navController = navController,
-                        authViewModel,
-                        parkingViewModel,
-                        reservationViewModel
-                    )
+                    if (userExists) {
+                        DashboardScreen(
+                            parkingViewModel,
+                            reservationViewModel = reservationViewModel,
+                            preferencesManager,
+                            this
+                        )
+                    } else {
+                        ParkingAppNavigation(
+                            navController = navController,
+                            authViewModel,
+                            parkingViewModel,
+                            reservationViewModel,
+                            preferencesManager,
+                            this
+
+                        )
+                    }
                 }
             }
         }
     }
 }
 
-
 @Composable
 fun ParkingAppNavigation(
     navController: NavHostController,
     authViewModel: AuthViewModel,
     parkingViewModel: ParkingViewModel,
-    reservationViewModel: ReservationViewModel
+    reservationViewModel: ReservationViewModel,
+    preferencesManager: PreferencesManager,
+    activity: ComponentActivity
 ) {
-
-
-    NavHost(navController, startDestination = Destination.Dashboard.route) {
+    NavHost(navController, startDestination = Destination.Login.route) {
 
         // Login & Sign Up Destinations
         composable(Destination.Login.route) {
@@ -85,11 +102,12 @@ fun ParkingAppNavigation(
 
         // Dashboard Destination
         composable(Destination.Dashboard.route) {
-            DashboardScreen(parkingViewModel, reservationViewModel = reservationViewModel)
+            DashboardScreen(
+                parkingViewModel,
+                reservationViewModel = reservationViewModel,
+                preferencesManager = preferencesManager,
+                activity = activity
+            )
         }
-
-
     }
 }
-
-
