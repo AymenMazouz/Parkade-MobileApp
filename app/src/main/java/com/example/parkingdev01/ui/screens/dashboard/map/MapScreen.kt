@@ -1,17 +1,37 @@
-package com.example.parkingdev01.ui.screens.dashboard.map
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ToggleOff
 import androidx.compose.material.icons.filled.ToggleOn
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import com.example.parkingdev01.data.model.Parking
+import com.example.parkingdev01.data.remote.RetrofitInstance.IMAGES_URL
+import com.example.parkingdev01.ui.screens.Destination
+import com.example.parkingdev01.ui.screens.dashboard.map.MapEvent
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
@@ -21,21 +41,18 @@ import com.plcoding.mapscomposeguide.presentation.MapsViewModel
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MapScreen(
-    viewModel: MapsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    navController: NavController,
+    viewModel: MapsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    parkingList: List<Parking>
 ) {
     val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
+
     val uiSettings = remember {
         MapUiSettings(zoomControlsEnabled = false)
     }
 
-    // Define marker coordinates
-    val markerCoordinates = listOf(
-        LatLng(36.7538, 3.0588),  // Example marker 1
-        LatLng(36.7519, 3.0542),  // Example marker 2
-        LatLng(36.7642, 3.1822),  // Example marker 3
-        LatLng(36.7639, 3.0554),  // Example marker 4
-        LatLng(36.7499, 3.0869)   // Example marker 5
-    )
+    var selectedParking by remember { mutableStateOf<Parking?>(null) }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -54,26 +71,58 @@ fun MapScreen(
             }
         },
     ) {
-        GoogleMap(
-            modifier = Modifier.fillMaxSize(),
-            properties = viewModel.state.properties,
-            uiSettings = uiSettings,
-            onMapLongClick = {
+        Box {
+            GoogleMap(
+                properties = viewModel.state.properties,
+                uiSettings = uiSettings,
+                onMapLongClick = {
 
+                }
+            ) {
+                // Add markers using parkingList data
+                parkingList.forEach { parking ->
+                    Marker(
+                        position = LatLng(parking.latitude, parking.longitude),
+                        onClick = {
+                            selectedParking = parking
+                            true
+                        }
+                    )
+                }
             }
-        ) {
-            // Add markers
-            markerCoordinates.forEach { coordinate ->
-                Marker(
-                    position = coordinate,
-                   // onClick = {
-                        // Handle marker click here, you can display a card with its name
-                        // For example, you can use a Snackbar or a Dialog to show the name
-                        // of the clicked marker.
-                        // For simplicity, I'll just print the marker's latitude and longitude.
-                     //   println("Marker Clicked")
-                   // }
-                )
+
+            // Display card if a parking is selected
+            selectedParking?.let { parking ->
+                Card(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.BottomCenter),
+                    elevation = 8.dp
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .clickable {
+                                navController.navigate(Destination.ParkingDetails.createRoute(parking.id))
+                            }
+                    ) {
+                        Text(text = "Parking Name: ${parking.name}")
+                        // Assuming parking.imageUri is a URI or URL to the parking image
+                        Image(
+                            painter = rememberAsyncImagePainter("$IMAGES_URL${parking.photoUrl}"),
+                            contentDescription = "Parking Image",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        )
+                        Button(
+                            onClick = { selectedParking = null },
+                            modifier = Modifier.align(Alignment.End)
+                        ) {
+                            Text("Dismiss")
+                        }
+                    }
+                }
             }
         }
     }

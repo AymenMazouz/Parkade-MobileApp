@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitInstance {
-    private const val NGROK_URL = "https://c784-105-98-86-53.ngrok-free.app/"
+    private const val NGROK_URL = "https://6aeb-197-204-49-56.ngrok-free.app/"
     private const val BASE_URL = NGROK_URL + "ords/parkade/"
     const val IMAGES_URL = NGROK_URL + "parking/"
 
