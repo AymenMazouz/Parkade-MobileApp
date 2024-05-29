@@ -42,9 +42,9 @@ class ReservationRepository() {
                            id = reservationItem.id,
                            parkingId = reservationItem.parking_id,
                            userId = reservationItem.user_id,
-                           placedAt = reservationItem.placed_at,
-                           entryTime = reservationItem.entry_time,
-                           exitTime = reservationItem.exit_time,
+                           placedAt = reservationItem.placed_at.toLong(),
+                           entryTime = reservationItem.entry_time.toLong(),
+                           exitTime = reservationItem.exit_time.toLong(),
                            price = reservationItem.price
                      ) } ?: emptyList()
 
@@ -81,9 +81,9 @@ class ReservationRepository() {
                             id = reservationItem.id,
                             parkingId = reservationItem.parking_id,
                             userId = reservationItem.user_id,
-                            placedAt = reservationItem.placed_at,
-                            entryTime = reservationItem.entry_time,
-                            exitTime = reservationItem.exit_time,
+                            placedAt = reservationItem.placed_at.toLong(),
+                            entryTime = reservationItem.entry_time.toLong(),
+                            exitTime = reservationItem.exit_time.toLong(),
                             price = reservationItem.price
                         )
                     } ?: emptyList()
@@ -123,9 +123,9 @@ class ReservationRepository() {
                             id = reservationItem.id,
                             parkingId = reservationItem.parking_id,
                             userId = reservationItem.user_id,
-                            placedAt = reservationItem.placed_at,
-                            entryTime = reservationItem.entry_time,
-                            exitTime = reservationItem.exit_time,
+                            placedAt = reservationItem.placed_at.toLong(),
+                            entryTime = reservationItem.entry_time.toLong(),
+                            exitTime = reservationItem.exit_time.toLong(),
                             price = reservationItem.price
                         )
                     }
@@ -195,12 +195,9 @@ class ReservationRepository() {
 
     suspend fun book(reservation: Reservation): Boolean {
 
-        val entryTimeFormatted = TimeUtil.formatTimestamp(reservation.entryTime.toLong())
-        val exitTimeFormatted = TimeUtil.formatTimestamp(reservation.exitTime.toLong())
-
         val response = reservationApi.book(
-            entryTimeFormatted,
-            exitTimeFormatted,
+            reservation.entryTime,
+            reservation.exitTime,
             reservation.parkingId,
             reservation.userId,
             reservation.price

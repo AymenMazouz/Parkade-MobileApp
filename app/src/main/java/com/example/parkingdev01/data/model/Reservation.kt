@@ -17,8 +17,8 @@ data class Reservation(
     @PrimaryKey val id: Int,
     val parkingId: Int,
     val userId: Int,
-    val placedAt: String,
-    val entryTime: String,
-    val exitTime: String,
+    val placedAt: Long,
+    val entryTime: Long,
+    val exitTime: Long,
     val price: Long
 )

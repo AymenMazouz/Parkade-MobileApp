@@ -1,14 +1,36 @@
 package com.example.parkingdev01.ui.screens.dashboard.parking
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.Context
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -24,8 +46,10 @@ import com.example.parkingdev01.ui.viewmodels.ReservationViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParkingDetails(
     parkingId: Int,
@@ -36,10 +60,13 @@ fun ParkingDetails(
         value = parkingViewModel.loadParkingDetails(parkingId)
     }
 
+    var reservationStatus by remember { mutableStateOf<String?>(null) }
 
-    var entryTime by remember { mutableStateOf("06/05/24 08:00:00,000000000") }
-    var exitTime by remember { mutableStateOf("07/05/24 18:00:00,000000000") }
-    var price by remember { mutableStateOf("1500") }
+
+    var entryDateTime by remember { mutableStateOf(Calendar.getInstance()) }
+    var exitDateTime by remember { mutableStateOf(Calendar.getInstance()) }
+
+    val context = LocalContext.current
 
     if (parking == null) {
         Text("Loading...")
@@ -51,7 +78,7 @@ fun ParkingDetails(
                 .verticalScroll(scrollState)
         ) {
             val painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current).data(data = "$IMAGES_URL${parking!!.photoUrl}")
+                ImageRequest.Builder(context).data(data = "$IMAGES_URL${parking!!.photoUrl}")
                     .apply {
                         crossfade(true)
                     }.build()
@@ -105,24 +132,63 @@ fun ParkingDetails(
 
             // Form section
             Column(modifier = Modifier.padding(bottom = 16.dp)) {
+                val dateFormat = SimpleDateFormat("dd/MM/yy HH:mm:ss", Locale.getDefault())
+
                 OutlinedTextField(
-                    value = entryTime,
-                    onValueChange = { entryTime = it },
-                    label = { Text("Entry Time (ms)") },
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                    value = dateFormat.format(entryDateTime.time),
+                    onValueChange = { },
+                    label = { Text("Entry Time") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    readOnly = true,
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            showDateTimePicker(context, entryDateTime) { updatedCalendar ->
+                                entryDateTime = updatedCalendar
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.CalendarToday,
+                                contentDescription = "Select Date"
+                            )
+                        }
+                    }
                 )
+
                 OutlinedTextField(
-                    value = exitTime,
-                    onValueChange = { exitTime = it },
-                    label = { Text("Exit Time (ms)") },
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                    value = dateFormat.format(exitDateTime.time),
+                    onValueChange = { },
+                    label = { Text("Exit Time") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    readOnly = true,
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            showDateTimePicker(context, exitDateTime) { updatedCalendar ->
+                                exitDateTime = updatedCalendar
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.CalendarToday,
+                                contentDescription = "Select Date"
+                            )
+                        }
+                    }
                 )
-                OutlinedTextField(
-                    value = price,
-                    onValueChange = { price = it },
-                    label = { Text("Price") },
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+
+                val price by remember { mutableStateOf("1500") }
+
+                Text(
+                    text = "Price: ${price}DA", // Concatenate the price with a label and "DA"
+                    fontSize = 24.sp, // Set a bigger font size
+                    color = Color.Red, // Set text color to green
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
                 )
+
 
                 // Book Now button
                 Button(
@@ -131,23 +197,67 @@ fun ParkingDetails(
                             id = 1,
                             parkingId = parkingId,
                             userId = 1,
-                            placedAt = "2024-05-20 10:00:00",
-                            entryTime = entryTime,
-                            exitTime = exitTime,
+                            placedAt = System.currentTimeMillis(), // Using current time in milliseconds
+                            entryTime = entryDateTime.timeInMillis,
+                            exitTime = exitDateTime.timeInMillis,
                             price = price.toLong()
                         )
 
                         CoroutineScope(Dispatchers.Main).launch {
-                            reservationViewModel.bookParkingSpace(reservation)
+                            val isSuccess = reservationViewModel.bookParkingSpace(reservation)
+                            reservationStatus = if (isSuccess) "Reservation successful" else "Reservation failed"
                         }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 30.dp) // Adding bottom margin of 30.dp
+                        .padding(bottom = 30.dp), // Adding bottom margin of 30.dp
+                    enabled = reservationStatus == null // Disable the button if reservationStatus is not null
                 ) {
                     Text("Book Now", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                }
+
+                // Reservation status text
+                reservationStatus?.let { status ->
+                    Text(
+                        text = status,
+                        fontSize = 14.sp,
+                        color = if (status == "Reservation successful") Color.DarkGray else Color.Red,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
                 }
             }
         }
     }
 }
+
+
+
+
+fun showDateTimePicker(
+    context: Context,
+    calendar: Calendar,
+    onDateTimeSelected: (Calendar) -> Unit
+) {
+    val currentYear = calendar.get(Calendar.YEAR)
+    val currentMonth = calendar.get(Calendar.MONTH)
+    val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+
+    DatePickerDialog(context, { _, year, month, day ->
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.DAY_OF_MONTH, day)
+
+        val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+        val currentMinute = calendar.get(Calendar.MINUTE)
+
+        TimePickerDialog(context, { _, hour, minute ->
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
+            calendar.set(Calendar.MINUTE, minute)
+            onDateTimeSelected(calendar)
+        }, currentHour, currentMinute, true).show()
+
+    }, currentYear, currentMonth, currentDay).show()
+}
+
+
+

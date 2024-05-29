@@ -28,8 +28,8 @@ interface ReservationApi {
 
     @POST("reservation/book")
     suspend fun book(
-        @Header("entryTime") entryTime: String,
-        @Header("exitTime") exitTime: String,
+        @Header("entryTime") entryTime: Long,
+        @Header("exitTime") exitTime: Long,
         @Header("parkingId") parkingId: Int,
         @Header("userId") userId: Int,
         @Header("price") price: Long
