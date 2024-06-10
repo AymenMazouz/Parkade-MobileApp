@@ -3,6 +3,7 @@ package com.example.parkingdev01.ui.screens.dashboard.parking
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -41,6 +42,8 @@ import coil.request.ImageRequest
 import com.example.parkingdev01.data.model.Parking
 import com.example.parkingdev01.data.model.Reservation
 import com.example.parkingdev01.data.remote.RetrofitInstance.IMAGES_URL
+import com.example.parkingdev01.data.repository.NotificationRepository
+import com.example.parkingdev01.ui.viewmodels.NotificationViewModel
 import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
 import com.example.parkingdev01.ui.viewmodels.ReservationViewModel
 import com.example.parkingdev01.util.Constants
@@ -50,7 +53,6 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import kotlin.reflect.jvm.internal.impl.load.java.Constant
 
 @Composable
 fun ParkingDetails(
@@ -61,16 +63,24 @@ fun ParkingDetails(
     val parking by produceState<Parking?>(null, parkingId) {
         value = parkingViewModel.loadParkingDetails(parkingId)
     }
+    val notificationRepository by lazy { NotificationRepository() }
+    val notificationViewModel: NotificationViewModel by lazy { NotificationViewModel(notificationRepository) }
 
 
 
-    var reservationStatus by remember { mutableStateOf<String?>(null) }
 
-    var entryDateTime by remember { mutableStateOf(Calendar.getInstance()) }
-    // Initialize exitDateTime with the current time plus one hour
-    var exitDateTime by remember {
+    var reservationStatus by remember { mutableStateOf<String>("Init") }
+
+    // Initialize exitDateTime
+    var entryDateTime by remember {
         mutableStateOf(Calendar.getInstance().apply {
             add(Calendar.HOUR, 1)
+        })
+    }
+    // Initialize exitDateTime
+    var exitDateTime by remember {
+        mutableStateOf(Calendar.getInstance().apply {
+            add(Calendar.HOUR, 25)
         })
     }
     val context = LocalContext.current
@@ -189,7 +199,7 @@ fun ParkingDetails(
 
                 val durationInMillis = exitDateTime.timeInMillis - entryDateTime.timeInMillis
                 val hours = durationInMillis / (1000 * 60 * 60)
-                val price = hours * hourlyRate
+                val price = (hours * hourlyRate).toLong()
 
                 Text(
                     text = "Price: $price DA",
@@ -210,25 +220,44 @@ fun ParkingDetails(
                             placedAt = System.currentTimeMillis(), // Using current time in milliseconds
                             entryTime = entryDateTime.timeInMillis,
                             exitTime = exitDateTime.timeInMillis,
-                            price = price.toLong()
+                            price = price
                         )
 
                         CoroutineScope(Dispatchers.Main).launch {
-                            val isSuccess = reservationViewModel.bookParkingSpace(reservation)
+                            var isSuccess = reservationViewModel.bookParkingSpace(reservation)
                             reservationStatus = if (isSuccess) "Reservation successful" else "Reservation failed"
+
+                            if (isSuccess){
+
+                                // Schedule notification
+                                isSuccess = notificationViewModel.scheduleNotification(
+                                    token = Constants.APP_TOKEN, // Replace with actual user token
+                                    title = "Reservation Reminder",
+                                    body = "Your parking reservation at ${parking!!.name} is starting soon.",
+                                    time = (reservation.entryTime / 1000) - 3590  // One hour before
+                                )
+                                reservationStatus = if (isSuccess) {
+                                    "Reservation successful. Notification Scheduled."
+                                } else {
+                                    "Reservation successful. Notification schedule failed."
+                                }
+                            } else {
+                                reservationStatus = "Reservation booking failed."
+                            }
+
                         }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 30.dp), // Adding bottom margin of 30.dp
-                    enabled = parking!!.availablePlaces > 0 && reservationStatus != "Reservation successful"
+                    enabled = parking!!.availablePlaces > 0 && !(reservationStatus.contains("Reservation successful"))  && price > 0
                 // Disable the button if reservationStatus is not null
                 ) {
                     Text("Book Now", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 }
 
                 // Reservation status text
-                reservationStatus?.let { status ->
+                reservationStatus.let { status ->
                     Text(
                         text = status,
                         fontSize = 14.sp,
@@ -246,27 +275,33 @@ fun ParkingDetails(
 
 fun showDateTimePicker(
     context: Context,
-    calendar: Calendar,
+    initialCalendar: Calendar,
     onDateTimeSelected: (Calendar) -> Unit
 ) {
-    val currentYear = calendar.get(Calendar.YEAR)
-    val currentMonth = calendar.get(Calendar.MONTH)
-    val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+    val currentYear = initialCalendar.get(Calendar.YEAR)
+    val currentMonth = initialCalendar.get(Calendar.MONTH)
+    val currentDay = initialCalendar.get(Calendar.DAY_OF_MONTH)
+    val currentHour = initialCalendar.get(Calendar.HOUR_OF_DAY)
+    val currentMinute = initialCalendar.get(Calendar.MINUTE)
 
     DatePickerDialog(context, { _, year, month, day ->
-        calendar.set(Calendar.YEAR, year)
-        calendar.set(Calendar.MONTH, month)
-        calendar.set(Calendar.DAY_OF_MONTH, day)
-
-        val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
-        val currentMinute = calendar.get(Calendar.MINUTE)
-
         TimePickerDialog(context, { _, hour, minute ->
-            calendar.set(Calendar.HOUR_OF_DAY, hour)
-            calendar.set(Calendar.MINUTE, minute)
-            onDateTimeSelected(calendar)
-        }, currentHour, currentMinute, true).show()
+            val updatedCalendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, year)
+                set(Calendar.MONTH, month)
+                set(Calendar.DAY_OF_MONTH, day)
+                set(Calendar.HOUR_OF_DAY, hour)
+                set(Calendar.MINUTE, minute)
+            }
 
+            val currentTime = Calendar.getInstance().timeInMillis
+            if (updatedCalendar.timeInMillis >= currentTime) {
+                onDateTimeSelected(updatedCalendar)
+            } else {
+                // Show a message to the user that the selected date-time is invalid
+                Toast.makeText(context, "Selected date-time cannot be in the past.", Toast.LENGTH_SHORT).show()
+            }
+        }, currentHour, currentMinute, true).show()
     }, currentYear, currentMonth, currentDay).show()
 }
 

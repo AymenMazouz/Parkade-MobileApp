@@ -31,6 +31,8 @@ class MainActivity : ComponentActivity() {
     private val userRepository by lazy { UserRepository() }
     private val parkingRepository by lazy { ParkingRepository() }
     private val reservationRepository by lazy { ReservationRepository() }
+//    private val notificationRepository by lazy { NotificationRepository() }
+
 
     private val parkingViewModel: ParkingViewModel by lazy { ParkingViewModel(parkingRepository) }
     private val reservationViewModel: ReservationViewModel by lazy {

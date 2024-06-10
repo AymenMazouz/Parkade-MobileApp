@@ -48,6 +48,7 @@ import com.example.parkingdev01.R
 import com.example.parkingdev01.data.model.Reservation
 import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
 import com.example.parkingdev01.ui.viewmodels.ReservationViewModel
+import com.example.parkingdev01.util.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -157,8 +158,7 @@ fun ReservationContent(navController: NavHostController, reservationViewModel: R
         IconButton(
             onClick = {
                 CoroutineScope(Dispatchers.Main).launch {
-                    reservationList = reservationViewModel.loadReservationByUser(1)
-                    // here you should change from the preference File
+                    reservationList = reservationViewModel.loadReservationByUser(Constants.USER.id)
                 }
             },
             modifier = Modifier
