@@ -1,16 +1,32 @@
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -24,14 +40,22 @@ import androidx.navigation.NavHostController
 import com.example.parkingdev01.R
 import com.example.parkingdev01.data.model.Parking
 import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.parkingdev01.util.PreferencesManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ParkingContent(navController: NavHostController, parkingViewModel: ParkingViewModel) {
+fun ParkingContent(
+    navController: NavHostController,
+    preferencesManager: PreferencesManager,
+    parkingViewModel: ParkingViewModel
+) {
     var parkingList by remember { mutableStateOf(emptyList<Parking>()) }
+    val user = preferencesManager.getUser()
+
+    LaunchedEffect(Unit) {
+        // Load parkings automatically when the composable is launched
+        parkingList = parkingViewModel.loadParkingRemote()
+    }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -52,17 +76,8 @@ fun ParkingContent(navController: NavHostController, parkingViewModel: ParkingVi
                                 navController.popBackStack()
                             }
                     )
-                    Spacer(modifier = Modifier.width(320.dp)) // Add spacing between icons
-                    Icon(
-                        imageVector = Icons.Filled.Notifications,
-                        contentDescription = "Notification",
-                        modifier = Modifier
-                            .size(28.dp)
-                    )
                 }
-            },
-            // backgroundColor = Color.Transparent, // Transparent background for app bar
-            // elevation = 0.dp // No elevation for app bar
+            }
         )
 
         // First section as a card with white background
@@ -70,7 +85,7 @@ fun ParkingContent(navController: NavHostController, parkingViewModel: ParkingVi
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 5.dp)
-                .height(170.dp), // Set the height to 200.dp
+                .height(150.dp), // Set the height to 200.dp
             shape = RoundedCornerShape(16.dp), // Rounded corners for the card
         ) {
             Box(
@@ -93,13 +108,15 @@ fun ParkingContent(navController: NavHostController, parkingViewModel: ParkingVi
                         modifier = Modifier.padding(start = 16.dp), // Add padding to the left
                         horizontalAlignment = Alignment.Start // Align text to the left
                     ) {
-                        Text(
-                            text = "Welcome Mazouz,",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 28.sp, // Définir la taille de la police
-                            modifier = Modifier.padding(bottom = 11.dp)
-                        )
+                        if (user != null) {
+                            Text(
+                                text = "Welcome ${user.firstName}",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 28.sp, // Définir la taille de la police
+                                modifier = Modifier.padding(bottom = 11.dp)
+                            )
+                        }
                         Text(
                             text = "Find a place to your car",
                             color = Color.White,
@@ -130,19 +147,19 @@ fun ParkingContent(navController: NavHostController, parkingViewModel: ParkingVi
             }
         }
 
-        // Refresh icon
-        IconButton(
-            onClick = {
-                CoroutineScope(Dispatchers.Main).launch {
-                    parkingList = parkingViewModel.loadParkingRemote()
-                }
-            },
-            modifier = Modifier
-                .align(Alignment.End)
-                .padding(16.dp)
-        ) {
-            Icon(imageVector = Icons.Default.Refresh, contentDescription = "Refresh", modifier = Modifier.size(28.dp))
-        }
+      //here add a text Parkings List and an vertical line in baby bleu
+        Text(
+            text = "Parkings List :",
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(start = 23.dp, top = 10.dp)
+        )
+        Divider(
+            color = Color(0xFF5F93FB), // Baby blue color
+            thickness = 1.dp,
+            modifier = Modifier.padding(horizontal = 23.dp, vertical = 5.dp)
+        )
 
         // Second section with scrollable parkings
         LazyColumn(

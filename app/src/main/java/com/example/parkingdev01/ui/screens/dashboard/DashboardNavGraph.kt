@@ -33,7 +33,7 @@ fun DashboardNavGraph(
             MapContent(navController,parkingViewModel)
         }
         composable(Destination.Parkings.route) {
-            ParkingContent(navController,parkingViewModel)
+            ParkingContent(navController,preferencesManager,parkingViewModel)
         }
         composable(Destination.Reservations.route) {
             ReservationContent(navController,reservationViewModel) //TO CHAAAAAAAAAAAAANGEEEEEEE

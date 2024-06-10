@@ -1,8 +1,14 @@
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -40,7 +46,6 @@ fun ParkingCard(parking: Parking, navController: NavHostController) {
             .build()
     )
 
-    val usedPlaces = parking.totalPlaces - parking.availablePlaces
 
     OutlinedCard(
         colors = CardDefaults.cardColors(
@@ -88,7 +93,7 @@ fun ParkingCard(parking: Parking, navController: NavHostController) {
                         modifier = Modifier.padding(bottom = 1.dp)
                     )
                     Text(
-                        text = "Used Places: $usedPlaces/${parking.totalPlaces}",
+                        text = "Total Places: ${parking.totalPlaces}",
                         color = Color(0xFF5F93FB), // Light blue color
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(bottom = 1.dp)

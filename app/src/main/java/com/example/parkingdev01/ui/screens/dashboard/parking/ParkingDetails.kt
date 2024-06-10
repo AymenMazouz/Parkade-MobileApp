@@ -6,15 +6,21 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.PriceChange
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,12 +35,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -100,7 +108,18 @@ fun ParkingDetails(
                         crossfade(true)
                     }.build()
             )
-
+            Text(
+                text = "Parkings Details :",
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(start = 5.dp, top = 10.dp)
+            )
+            TabRowDefaults.Divider(
+                color = Color(0xFF5F93FB), // Baby blue color
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 5.dp, vertical = 10.dp)
+            )
             // Image section
             Image(
                 painter = painter,
@@ -109,12 +128,13 @@ fun ParkingDetails(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .padding(bottom = 10.dp)
+                    .padding(bottom = 7.dp)
                     .clip(RoundedCornerShape(8.dp))
             )
 
             // Information card
             Card(
+
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
@@ -123,30 +143,87 @@ fun ParkingDetails(
                     containerColor = MaterialTheme.colorScheme.surface,
                 )
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(7.dp)) {
                     Text(
+                        textAlign = TextAlign.Left,
                         text = parking!!.name,
-                        fontSize = 20.sp,
+                        fontSize = 23.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(7.dp))
                     Text(
                         text = parking!!.description,
                         fontSize = 16.sp
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = parking!!.wilaya,
-                        fontSize = 16.sp
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = parking!!.location,
-                        fontSize = 16.sp
-                    )
+                    Spacer(modifier = Modifier.height(7.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        androidx.compose.material.Icon(
+                            imageVector = Icons.Default.Place,
+                            contentDescription = "Map",
+                            tint = Color(0xFF5F93FB), // Light blue color
+                            modifier = Modifier
+                                .size(20.dp)
+                        )
+
+                        Text(
+                            text = "${parking!!.commune}, ${parking!!.location}, ${parking!!.wilaya}",
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(start = 5.dp)
+                        )
+
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        androidx.compose.material.Icon(
+                            imageVector = Icons.Default.PriceChange,
+                            contentDescription = "Price",
+                            tint = Color(0xFF5F93FB), // Light blue color
+                            modifier = Modifier
+                                .size(20.dp)
+                        )
+
+                        Text(
+                            text = "Daily Price : ${parking!!.dailyPrice} DA",
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(start = 5.dp)
+                        )
+
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        androidx.compose.material.Icon(
+                            imageVector = Icons.Default.DirectionsCar,
+                            contentDescription = "Price",
+                            tint = Color(0xFF5F93FB), // Light blue color
+                            modifier = Modifier
+                                .size(20.dp)
+                        )
+
+                        Text(
+                            text = "Size : ${parking!!.totalPlaces} Place",
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(start = 5.dp)
+                        )
+
+                    }
                 }
             }
-
+            Text(
+                text = "Booking Form :",
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(start = 5.dp, top = 10.dp)
+            )
+            TabRowDefaults.Divider(
+                color = Color(0xFF5F93FB), // Baby blue color
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 5.dp, vertical = 10.dp)
+            )
             // Form section
             Column(modifier = Modifier.padding(bottom = 16.dp)) {
                 val dateFormat = SimpleDateFormat("dd/MM/yy HH:mm:ss", Locale.getDefault())
@@ -202,9 +279,9 @@ fun ParkingDetails(
                 val price = (hours * hourlyRate).toLong()
 
                 Text(
-                    text = "Price: $price DA",
-                    fontSize = 24.sp,
-                    color = Color.Red,
+                    text = "The Price will be : $price DA",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp)
@@ -265,6 +342,9 @@ fun ParkingDetails(
                         modifier = Modifier.padding(top = 8.dp)
                     )
                 }
+
+                Spacer(modifier = Modifier.height(50.dp))
+
             }
         }
     }

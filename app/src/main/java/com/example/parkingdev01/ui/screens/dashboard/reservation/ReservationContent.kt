@@ -1,6 +1,5 @@
 package com.example.parkingdev01.ui.screens.dashboard.reservation
 
-import ParkingCard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,9 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -38,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,12 +42,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.parkingdev01.R
 import com.example.parkingdev01.data.model.Reservation
-import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
 import com.example.parkingdev01.ui.viewmodels.ReservationViewModel
 import com.example.parkingdev01.util.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReservationContent(navController: NavHostController, reservationViewModel: ReservationViewModel) {
@@ -95,7 +91,7 @@ fun ReservationContent(navController: NavHostController, reservationViewModel: R
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 5.dp)
-                .height(170.dp), // Set the height to 200.dp
+                .height(150.dp), // Set the height to 200.dp
             shape = RoundedCornerShape(16.dp), // Rounded corners for the card
         ) {
             Box(
