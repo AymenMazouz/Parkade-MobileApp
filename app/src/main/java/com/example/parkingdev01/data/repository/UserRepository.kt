@@ -64,16 +64,18 @@ class UserRepository {
                 val jsonAdapter: JsonAdapter<Map<String, String>> = moshi.adapter(type)
                 val responseObject: Map<String, String>? = jsonAdapter.fromJson(jsonResponse)
                 // Check if output_message is "success"
-                return responseObject?.get("output_message") == "success"
+
+                val responseMessage = responseObject?.get("output_message")
+                return responseMessage == "success" || responseMessage == "ignored"
             }
         }
         return false
     }
 
 
-    suspend fun getDetails(email: String, password: String): User? {
+    suspend fun getDetails(email: String): User? {
 
-        val response = userApi.getDetails(email, password)
+        val response = userApi.getDetails(email)
 
 
         if (response.isSuccessful) {

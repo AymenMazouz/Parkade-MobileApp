@@ -33,7 +33,6 @@ interface UserApi {
     @GET("user/get")
     suspend fun getDetails(
         @Header("email") email: String,
-        @Header("password") password: String,
     ): Response<ResponseBody>
 
 

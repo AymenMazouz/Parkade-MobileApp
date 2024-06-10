@@ -177,7 +177,7 @@ fun LoginScreen(navHostController: NavHostController, authViewModel: AuthViewMod
                         }
                     }
                 ) {
-                    Text("Wrong Email or password")
+                    Text("Error Happened")
                 }
             }
             Spacer(modifier = Modifier.height(5.dp))
