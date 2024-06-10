@@ -11,6 +11,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.PriceChange
 import androidx.compose.material.icons.filled.Start
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -73,7 +74,7 @@ fun ReservationCard(reservation: Reservation, navController: NavHostController) 
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = Icons.Default.DirectionsCar,
+                    imageVector = Icons.Default.PriceChange,
                     contentDescription = "Price",
                     tint = Color(0xFF5F93FB), // Light blue color
                     modifier = Modifier.size(20.dp)

@@ -1,12 +1,9 @@
 package com.example.parkingdev01.data.repository
 
 import android.annotation.SuppressLint
-import com.example.parkingdev01.data.model.Parking
 import com.example.parkingdev01.data.model.Reservation
 import com.example.parkingdev01.data.remote.RetrofitInstance
-import com.example.parkingdev01.util.ParkingResponse
 import com.example.parkingdev01.util.ReservationResponse
-import com.example.parkingdev01.util.TimeUtil
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -105,7 +102,8 @@ class ReservationRepository() {
 
     suspend fun getById(id: Int): Reservation? {
         try {
-            val response = reservationApi.getById(1)
+
+            val response = reservationApi.getById(id)
             if (response.isSuccessful) {
                 val jsonResponse = response.body()?.string()
                 println("JSON Response: $jsonResponse") // Print JSON response for debugging
