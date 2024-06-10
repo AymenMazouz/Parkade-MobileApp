@@ -1,5 +1,10 @@
 package com.example.parkingdev01.ui.screens.login
 
+import android.app.Activity
+import android.content.ContentValues.TAG
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,15 +43,54 @@ import androidx.navigation.NavHostController
 import com.example.parkingdev01.R
 import com.example.parkingdev01.ui.screens.Destination
 import com.example.parkingdev01.ui.viewmodels.AuthViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.common.api.ApiException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(navHostController: NavHostController, authViewModel: AuthViewModel) {
+fun LoginScreen(navHostController: NavHostController, authViewModel: AuthViewModel, mGoogleSignInClient: GoogleSignInClient) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showErrorSnackbar by remember { mutableStateOf(false) }
+
+
+
+    // Add this function for handling Google Sign-In
+    val signInLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.let { googleAccount ->
+                    // Authenticate with Firebase using googleAccount.idToken
+                    // Pass necessary parameters to authViewModel.login
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val success = authViewModel.loginWithGoogle(googleAccount.idToken!!)
+                        if (success) {
+                            navHostController.navigate(Destination.Dashboard.route) {
+                                popUpTo(Destination.Login.route) {
+                                    inclusive = true
+                                }
+                            }
+                        } else {
+                            showErrorSnackbar = true
+                        }
+                    }
+                }
+            } catch (e: ApiException) {
+                Log.w(TAG, "Google sign in failed", e)
+            }
+        }
+    }
+
+    // Function to handle Google Sign-In button click
+    fun signInWithGoogle() {
+        val signInIntent = mGoogleSignInClient.signInIntent
+        signInLauncher.launch(signInIntent)
+    }
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -112,6 +157,14 @@ fun LoginScreen(navHostController: NavHostController, authViewModel: AuthViewMod
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Log In", color = Color.White)
+            }
+
+            // Google Sign-In Button
+            Button(
+                onClick = { signInWithGoogle() },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Sign In with Google", color = Color.White)
             }
 
             // Snack bar to display error message

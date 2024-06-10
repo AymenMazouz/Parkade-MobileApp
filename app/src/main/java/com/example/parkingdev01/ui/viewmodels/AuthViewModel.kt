@@ -1,10 +1,15 @@
 package com.example.parkingdev01.ui.viewmodels
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.parkingdev01.data.model.User
 import com.example.parkingdev01.data.repository.UserRepository
 import com.example.parkingdev01.util.Constants
 import com.example.parkingdev01.util.PreferencesManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.coroutines.tasks.await
 
 class AuthViewModel(
     private val userRepository: UserRepository,
@@ -58,4 +63,40 @@ class AuthViewModel(
         }
         return false
     }
+
+    suspend fun loginWithGoogle(idToken: String): Boolean {
+        try {
+            // Authenticate with Firebase using the Google ID token
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            val authResult = FirebaseAuth.getInstance().signInWithCredential(credential).await()
+
+            // Get the user from Firebase Auth
+            val firebaseUser = authResult.user
+
+                // Get user details
+                val user = User(
+                    id = -1,
+                    email = firebaseUser?.email ?: "",
+                    firstName = firebaseUser?.displayName ?: "",
+                    lastName = firebaseUser?.displayName ?: "",
+                    phoneNumber = firebaseUser?.phoneNumber ?: "",
+                    photoUrl = firebaseUser?.photoUrl.toString() ?: "",
+                    password = "",
+                    )
+
+                // Save user details to local storage
+                preferencesManager.saveUser(user)
+
+                // Save token if needed
+                saveToken(Constants.APP_TOKEN)
+
+                return true // Login successful
+
+        } catch (e: Exception) {
+            // Handle login failure
+            Log.e(TAG, "Google sign in failed", e)
+        }
+        return false // Login failed
+    }
+
 }
