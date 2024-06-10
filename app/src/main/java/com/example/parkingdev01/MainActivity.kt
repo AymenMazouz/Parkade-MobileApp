@@ -12,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.parkingdev01.data.AppDatabase
 import com.example.parkingdev01.data.repository.ParkingRepository
 import com.example.parkingdev01.data.repository.ReservationRepository
 import com.example.parkingdev01.data.repository.UserRepository
@@ -33,10 +34,13 @@ import com.google.firebase.auth.auth
 
 class MainActivity : ComponentActivity() {
 
+    private val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }
+
     private lateinit var preferencesManager: PreferencesManager
     private val userRepository by lazy { UserRepository() }
-    private val parkingRepository by lazy { ParkingRepository() }
-    private val reservationRepository by lazy { ReservationRepository() }
+    private val parkingRepository by lazy { ParkingRepository(database.parkingDao(),this) }
+
+    private val reservationRepository by lazy { ReservationRepository(database.reservationDao(),this) }
 
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var mAuth: FirebaseAuth
@@ -45,10 +49,9 @@ class MainActivity : ComponentActivity() {
 
 
     private val parkingViewModel: ParkingViewModel by lazy { ParkingViewModel(parkingRepository) }
+
     private val reservationViewModel: ReservationViewModel by lazy {
-        ReservationViewModel(
-            reservationRepository
-        )
+        ReservationViewModel(reservationRepository)
     }
 
     private val authViewModel: AuthViewModel by lazy {

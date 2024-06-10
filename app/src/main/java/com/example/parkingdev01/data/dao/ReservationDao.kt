@@ -1,7 +1,6 @@
 package com.example.parkingdev01.data.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -11,16 +10,18 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ReservationDao {
 
-    @Query("SELECT * FROM Reservation WHERE userId = :userId")
-    fun getUserReservations(userId: String): Flow<List<Reservation>>
+    @Query("SELECT * FROM reservation")
+    fun getAllReservations(): List<Reservation>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertReservation(reservation: Reservation)
+    @Query("SELECT * FROM reservation WHERE userId = :userId")
+    suspend fun getReservationsByUserId(userId: Int): List<Reservation>
 
-    @Delete
-    suspend fun deleteReservation(reservation: Reservation)
+    @Query("SELECT * FROM reservation WHERE id = :reservationId")
+    suspend fun getReservationById(reservationId: Int): Reservation?
 
     @Query("DELETE FROM reservation")
-    suspend fun clearReservations()
+    suspend fun clearAll()
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(reservations: List<Reservation>)
 }

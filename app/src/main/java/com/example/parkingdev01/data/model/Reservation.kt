@@ -4,15 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "Reservation",
-    foreignKeys = [ForeignKey(
-        entity = Parking::class,
-        parentColumns = ["id"],
-        childColumns = ["parkingId"],
-        onDelete = ForeignKey.CASCADE
-    )]
-)
-
+@Entity(tableName = "Reservation")
 data class Reservation(
     @PrimaryKey(autoGenerate = true) val id: Int = 0, // Auto-generated primary key
     val parkingId: Int,

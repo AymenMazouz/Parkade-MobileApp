@@ -1,32 +1,45 @@
 package com.example.parkingdev01.data.repository
 
+import android.content.Context
+import com.example.parkingdev01.data.dao.ParkingDao
 import com.example.parkingdev01.data.model.Parking
 import com.example.parkingdev01.data.remote.RetrofitInstance
-import com.example.parkingdev01.util.ParkingItem
+import com.example.parkingdev01.util.Constants
 import com.example.parkingdev01.util.ParkingResponse
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 
-class ParkingRepository() {
-    //    private val parkingDao: ParkingDao
+class ParkingRepository(private val parkingDao: ParkingDao, private val context: Context) {
     private val parkingApi = RetrofitInstance.parkingApi
 
-    // Remote
     suspend fun getAll(): List<Parking> {
+        return withContext(Dispatchers.IO) {
+            if (Constants.isOnline(context)) {
+                val parkings = fetchFromRemote()
+                parkingDao.clearAll()
+                parkingDao.insertAll(parkings)
+                parkings
+            } else {
+                parkingDao.getAll()
+            }
+        }
+    }
+
+    private suspend fun fetchFromRemote(): List<Parking> {
         try {
             val response = parkingApi.getAll()
             if (response.isSuccessful) {
                 val jsonResponse = response.body()?.string()
-                println("JSON Response: $jsonResponse") // Print JSON response for debugging
-
-
                 jsonResponse?.let {
                     val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-
-
                     val jsonAdapter: JsonAdapter<ParkingResponse> =
                         moshi.adapter(ParkingResponse::class.java)
                     val parkingResponse = jsonAdapter.fromJson(jsonResponse)
@@ -49,35 +62,38 @@ class ParkingRepository() {
                     } ?: emptyList()
 
                     return parkingList
-
                 }
-
-                return emptyList()
-
             } else {
                 throw HttpException(response)
             }
         } catch (e: IOException) {
             throw e
         }
+        return emptyList()
     }
 
     suspend fun getById(id: Int): Parking? {
+        return withContext(Dispatchers.IO) {
+            if (Constants.isOnline(context)) {
+                fetchByIdRemote(id)
+            } else {
+                parkingDao.getById(id)
+            }
+        }
+    }
+
+    private suspend fun fetchByIdRemote(id: Int): Parking? {
         try {
             val response = parkingApi.getById(id)
             if (response.isSuccessful) {
                 val jsonResponse = response.body()?.string()
-                println("JSON Response: $jsonResponse") // Print JSON response for debugging
-
-                return jsonResponse?.let {
+                jsonResponse?.let {
                     val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-
-                    // Use ParkingResponse to parse the JSON response
-                    val jsonAdapter: JsonAdapter<ParkingResponse> = moshi.adapter(ParkingResponse::class.java)
+                    val jsonAdapter: JsonAdapter<ParkingResponse> =
+                        moshi.adapter(ParkingResponse::class.java)
                     val parkingResponse = jsonAdapter.fromJson(jsonResponse)
 
-                    // Extract the single parking item from the response
-                    parkingResponse?.items?.firstOrNull()?.let { parkingItem ->
+                    return parkingResponse?.items?.firstOrNull()?.let { parkingItem ->
                         Parking(
                             id = parkingItem.id,
                             name = parkingItem.name,
@@ -102,7 +118,4 @@ class ParkingRepository() {
         }
         return null
     }
-
-    // Local:
-    //    val allParkings: Flow<List<Parking>> = parkingDao.getAllParkings()
 }
