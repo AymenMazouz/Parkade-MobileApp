@@ -43,6 +43,10 @@ class PreferencesManager(context: Context) {
         }
     }
 
+    fun getUsedId(): Int {
+        return sharedPreferences.getInt("id", -1)
+    }
+
     fun clearUser() {
         sharedPreferences.edit().clear().apply()
     }

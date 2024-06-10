@@ -37,6 +37,12 @@ interface UserApi {
     ): Response<ResponseBody>
 
 
+
+    @POST("user/token/add")
+    suspend fun saveToken(
+        @Header("userId") userId: Int,
+        @Header("token") token: String
+    ): Response<ResponseBody>
 }
 
 

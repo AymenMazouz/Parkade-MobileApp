@@ -104,4 +104,30 @@ class UserRepository {
         }
     }
 
+
+    suspend fun saveToken(userId: Int, token: String): Boolean {
+        val response = userApi.saveToken(
+            userId = userId,
+            token = token
+        )
+        if (response.isSuccessful) {
+            val jsonResponse = response.body()?.string()
+            println("JSON Response: $jsonResponse") // Print JSON response for debugging
+            jsonResponse?.let {
+                val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+                val type = Types.newParameterizedType(
+                    Map::class.java,
+                    String::class.java,
+                    String::class.java
+                )
+                val jsonAdapter: JsonAdapter<Map<String, String>> = moshi.adapter(type)
+                val responseObject: Map<String, String>? = jsonAdapter.fromJson(jsonResponse)
+                // Check if output_message is "success"
+                val outputMessage = responseObject?.get("output_message")
+                return outputMessage == "success" || outputMessage == "ignored"
+            }
+        }
+        return false
+    }
+
 }

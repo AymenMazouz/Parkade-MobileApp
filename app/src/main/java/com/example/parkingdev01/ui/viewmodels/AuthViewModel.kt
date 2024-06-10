@@ -3,6 +3,7 @@ package com.example.parkingdev01.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import com.example.parkingdev01.data.model.User
 import com.example.parkingdev01.data.repository.UserRepository
+import com.example.parkingdev01.util.Constants
 import com.example.parkingdev01.util.PreferencesManager
 
 class AuthViewModel(
@@ -11,11 +12,13 @@ class AuthViewModel(
 ) : ViewModel() {
 
     suspend fun login(email: String, password: String): Boolean {
-        val isSuccess = userRepository.authenticate(email, password)
+        var isSuccess = userRepository.authenticate(email, password)
 
         if (isSuccess) {
             val user: User? = userRepository.getDetails(email, password)
             user?.let { preferencesManager.saveUser(it) }
+            isSuccess = saveToken(Constants.APP_TOKEN)
+
         }
 
         return isSuccess
@@ -29,7 +32,7 @@ class AuthViewModel(
         phoneNumber: String,
         photoUrl: String
     ): Boolean {
-        val isSuccess = userRepository.createUser(
+        var isSuccess = userRepository.createUser(
             email,
             password,
             firstName,
@@ -41,8 +44,18 @@ class AuthViewModel(
         if (isSuccess) {
             val user: User? = userRepository.getDetails(email, password)
             user.let { preferencesManager.saveUser(it!!) }
+            isSuccess = saveToken(Constants.APP_TOKEN)
         }
 
         return isSuccess
+    }
+
+
+    private suspend fun saveToken(token: String): Boolean{
+        val userId = preferencesManager.getUsedId()
+        if (userId != -1){
+            return userRepository.saveToken(userId, token)
+        }
+        return false
     }
 }
