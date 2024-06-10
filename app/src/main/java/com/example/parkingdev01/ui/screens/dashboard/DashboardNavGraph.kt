@@ -36,7 +36,7 @@ fun DashboardNavGraph(
             ParkingContent(navController,preferencesManager,parkingViewModel)
         }
         composable(Destination.Reservations.route) {
-            ReservationContent(navController,reservationViewModel) //TO CHAAAAAAAAAAAAANGEEEEEEE
+            ReservationContent(navController,preferencesManager,reservationViewModel) //TO CHAAAAAAAAAAAAANGEEEEEEE
         }
         composable(Destination.Profile.route) {
             ProfileContent(navController, preferencesManager, activity = activity)
@@ -52,7 +52,7 @@ fun DashboardNavGraph(
         composable(Destination.ReservationDetails.route) { backStackEntry ->
             val reservationId = backStackEntry.arguments?.getString("reservationId")?.toIntOrNull()
             if (reservationId != null) {
-                ReservationDetails(reservationId, reservationViewModel)
+                ReservationDetails(reservationId , reservationViewModel)
             }
         }
     }
