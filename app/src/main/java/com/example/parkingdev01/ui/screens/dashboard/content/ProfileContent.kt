@@ -91,6 +91,26 @@ fun ProfileContent(
                     fontWeight = FontWeight.Normal
                 )
             }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 40.dp)
+            ) {
+                Text(
+                    text = "User Id:",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.DarkGray,
+                )
+                Text(
+                    text = user.id.toString(),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Normal
+                )
+            }
         } else {
             Text(
                 text = "No user information available",

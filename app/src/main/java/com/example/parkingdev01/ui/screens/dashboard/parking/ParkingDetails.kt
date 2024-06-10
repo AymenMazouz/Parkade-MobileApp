@@ -43,12 +43,14 @@ import com.example.parkingdev01.data.model.Reservation
 import com.example.parkingdev01.data.remote.RetrofitInstance.IMAGES_URL
 import com.example.parkingdev01.ui.viewmodels.ParkingViewModel
 import com.example.parkingdev01.ui.viewmodels.ReservationViewModel
+import com.example.parkingdev01.util.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlin.reflect.jvm.internal.impl.load.java.Constant
 
 @Composable
 fun ParkingDetails(
@@ -60,12 +62,17 @@ fun ParkingDetails(
         value = parkingViewModel.loadParkingDetails(parkingId)
     }
 
+
+
     var reservationStatus by remember { mutableStateOf<String?>(null) }
 
-
     var entryDateTime by remember { mutableStateOf(Calendar.getInstance()) }
-    var exitDateTime by remember { mutableStateOf(Calendar.getInstance()) }
-
+    // Initialize exitDateTime with the current time plus one hour
+    var exitDateTime by remember {
+        mutableStateOf(Calendar.getInstance().apply {
+            add(Calendar.HOUR, 1)
+        })
+    }
     val context = LocalContext.current
 
     if (parking == null) {
@@ -178,12 +185,16 @@ fun ParkingDetails(
                     }
                 )
 
-                val price by remember { mutableStateOf("1500") }
+                val hourlyRate = parking?.dailyPrice?.div(24) ?: 0.0
+
+                val durationInMillis = exitDateTime.timeInMillis - entryDateTime.timeInMillis
+                val hours = durationInMillis / (1000 * 60 * 60)
+                val price = hours * hourlyRate
 
                 Text(
-                    text = "Price: ${price}DA", // Concatenate the price with a label and "DA"
-                    fontSize = 24.sp, // Set a bigger font size
-                    color = Color.Red, // Set text color to green
+                    text = "Price: $price DA",
+                    fontSize = 24.sp,
+                    color = Color.Red,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp)
@@ -194,9 +205,8 @@ fun ParkingDetails(
                 Button(
                     onClick = {
                         val reservation = Reservation(
-                            id = 1,
                             parkingId = parkingId,
-                            userId = 1,
+                            userId = Constants.USER.id,
                             placedAt = System.currentTimeMillis(), // Using current time in milliseconds
                             entryTime = entryDateTime.timeInMillis,
                             exitTime = exitDateTime.timeInMillis,

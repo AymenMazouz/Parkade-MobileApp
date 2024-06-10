@@ -24,12 +24,13 @@ class PreferencesManager(context: Context) {
             putString("photoUrl", user.photoUrl)
             apply()
         }
+        Constants.USER = user // Update the USER constant
     }
 
     fun getUser(): User? {
         if (sharedPreferences.contains("id")) {
             val id = sharedPreferences.getInt("id", -1)
-            return User(
+            val user = User(
                 id,
                 sharedPreferences.getString("firstName", "") ?: "",
                 sharedPreferences.getString("lastName", "") ?: "",
@@ -38,7 +39,12 @@ class PreferencesManager(context: Context) {
                 sharedPreferences.getString("phoneNumber", "") ?: "",
                 sharedPreferences.getString("photoUrl", "") ?: ""
             )
+
+            Constants.USER = user
+
+            return user
         } else {
+            Constants.USER = User(-1, "", "", "", "", "", "") // Clear the USER constant
             return null
         }
     }
@@ -49,5 +55,6 @@ class PreferencesManager(context: Context) {
 
     fun clearUser() {
         sharedPreferences.edit().clear().apply()
+        Constants.USER = User(-1, "", "", "", "", "", "") // Clear the USER constant
     }
 }
