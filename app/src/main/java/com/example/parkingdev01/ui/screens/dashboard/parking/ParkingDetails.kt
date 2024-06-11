@@ -308,9 +308,8 @@ fun ParkingDetails(
 
                                 // Schedule notification
                                 isSuccess = notificationViewModel.scheduleNotification(
-                                    token = Constants.APP_TOKEN, // Replace with actual user token
-                                    title = "Reservation Reminder",
-                                    body = "Your parking reservation at ${parking!!.name} is starting soon.",
+                                    userId = Constants.USER.id,
+                                    parkingName = parking!!.name,
                                     time = (reservation.entryTime / 1000) - 3590  // One hour before
                                 )
                                 reservationStatus = if (isSuccess) {

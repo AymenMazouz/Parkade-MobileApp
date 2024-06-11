@@ -67,6 +67,7 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android:2.49")
     implementation(libs.play.services.maps)
+    implementation(libs.firebase.auth)
     kapt("com.google.dagger:hilt-android-compiler:2.40.5")
     implementation("androidx.core:core-ktx:1.13.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -91,6 +92,7 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
 
+    implementation ("com.google.android.gms:play-services-auth:19.2.0")
 
     implementation ("com.squareup.moshi:moshi:1.12.0")
     implementation ("com.squareup.moshi:moshi-kotlin:1.12.0")

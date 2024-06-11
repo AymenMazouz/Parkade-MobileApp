@@ -12,7 +12,20 @@
           "package_name": "com.example.parkingdev01"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "479179506262-u8ju19vvqpb41lhf0ns49qg4kak4ub28.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.parkingdev01",
+            "certificate_hash": "11367413cfc2be894717f5179bc384240c80a2c5"
+          }
+        },
+        {
+          "client_id": "479179506262-j7njb4d4b5virrvqrgrnf212uc2jqh1m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAnvJ-KxvkTPbfNp70oMcVxBdKf0lk217w"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "479179506262-j7njb4d4b5virrvqrgrnf212uc2jqh1m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

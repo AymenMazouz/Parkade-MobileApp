@@ -2,9 +2,18 @@ package com.example.parkingdev01.util
 
 import com.example.parkingdev01.data.model.User
 
+import android.content.Context
+import android.net.ConnectivityManager
+
 class Constants {
     companion object {
-        var APP_TOKEN: String = "cKRagQUjR3aPjnB4Ix6ieV:APA91bHtC285ES3QS_5Il_iTZWdwbUEC-lwlH508eQOf7IZYq3M9yL2dySQZqobDA8VuSnLcDkQBIIZGfBAwBRjxfOTmlV8YCutUPzTnOpl_-xm7lsMEuNoJ57fTVGxfAU2_uFZYn6nj"
+        fun isOnline(context: Context): Boolean {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val networkInfo = connectivityManager.activeNetworkInfo
+            return networkInfo != null && networkInfo.isConnected
+        }
+
+        var APP_TOKEN: String = ""
         var USER: User = User(
             -1,
             "",
@@ -16,3 +25,4 @@ class Constants {
         )
     }
 }
+

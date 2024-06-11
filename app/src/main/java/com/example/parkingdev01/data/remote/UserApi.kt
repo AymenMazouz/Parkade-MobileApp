@@ -33,7 +33,6 @@ interface UserApi {
     @GET("user/get")
     suspend fun getDetails(
         @Header("email") email: String,
-        @Header("password") password: String,
     ): Response<ResponseBody>
 
 
@@ -43,6 +42,12 @@ interface UserApi {
         @Header("userId") userId: Int,
         @Header("token") token: String
     ): Response<ResponseBody>
+
+    @GET("user/token/get/{id}")
+    suspend fun getUserTokens(
+        @Path("id") id: Int
+    ): Response<ResponseBody>
+
 }
 
 
