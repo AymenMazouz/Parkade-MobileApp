@@ -6,11 +6,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitInstance {
-    private const val NGROK_URL = "https://15d5-105-235-130-4.ngrok-free.app/"
+    private const val NGROK_URL = "https://df91-41-111-189-173.ngrok-free.app/"
     private const val BASE_URL = NGROK_URL + "ords/parkade/"
     const val IMAGES_URL = NGROK_URL + "parking/"
 
-    private const val SCHEDULER_URL = "https://ec6c108f3d96bc3d605075d75f47a9ae.loophole.site/"
+    private const val SCHEDULER_URL = "https://1a14d65ee62c6b00bf1acf0f65faf385.loophole.site/"
 
     private val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
