@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: io.github.raamcosta.compose-destinations:core:1.1.2-beta@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f246e8b5466eea810ff2114950b6bac2/transformed/core-1.1.2-beta/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f246e8b5466eea810ff2114950b6bac2/transformed/core-1.1.2-beta/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

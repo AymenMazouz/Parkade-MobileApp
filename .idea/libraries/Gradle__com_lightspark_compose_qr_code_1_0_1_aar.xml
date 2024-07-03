@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: com.lightspark:compose-qr-code:1.0.1@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/16666aaa98ba90b52edfba4c866f3d3b/transformed/compose-qr-code-1.0.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/16666aaa98ba90b52edfba4c866f3d3b/transformed/compose-qr-code-1.0.1/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.lightspark/compose-qr-code/1.0.1/49aeea01c610dafb2c4fbdf899a18f53c318a453/compose-qr-code-1.0.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.lightspark/compose-qr-code/1.0.1/17b1de3bed65f9c03a10e2a2e7ee31134c20cb6b/compose-qr-code-1.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
