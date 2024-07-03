@@ -1,12 +1,11 @@
 package com.example.parkingdev01.data.repository
 
-import android.annotation.SuppressLint
 import android.content.Context
 import com.example.parkingdev01.data.dao.ReservationDao
-import com.example.parkingdev01.data.remote.ReservationApi
-import com.example.parkingdev01.util.Constants
 import com.example.parkingdev01.data.model.Reservation
+import com.example.parkingdev01.data.remote.ReservationApi
 import com.example.parkingdev01.data.remote.RetrofitInstance
+import com.example.parkingdev01.util.Constants
 import com.example.parkingdev01.util.ReservationResponse
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
